@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Портфолио | Обложка жасау + Админ панель (сурет жүктеу)</title>
+    <title>Портфолио | Обложка жасау + Админ панель</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -123,6 +123,24 @@
             padding: 6px 16px;
             font-size: 0.8rem;
         }
+        .btn-lang {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+        .btn-lang:hover {
+            border-color: var(--primary);
+            color: #fff;
+        }
+        .btn-lang.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
 
         /* ===== HEADER / NAV ===== */
         header {
@@ -199,6 +217,13 @@
             background: var(--text);
             border-radius: 4px;
             transition: var(--transition);
+        }
+
+        /* Language switcher in header */
+        .lang-switcher {
+            display: flex;
+            gap: 6px;
+            margin-left: 20px;
         }
 
         /* ===== HERO ===== */
@@ -420,7 +445,6 @@
             transform: scale(1.1);
         }
 
-        /* remove image button (admin only) */
         .admin-remove-img-btn {
             position: absolute;
             bottom: 12px;
@@ -511,7 +535,6 @@
             border: 2px solid var(--primary);
             border-radius: var(--radius);
             display: none;
-            /* hidden by default */;
         }
         .admin-panel.visible {
             display: block;
@@ -581,7 +604,6 @@
             margin-top: 4px;
         }
 
-        /* file input styling */
         .file-input-wrapper {
             position: relative;
             overflow: hidden;
@@ -803,6 +825,13 @@
             .contact-form {
                 padding: 28px 20px;
             }
+            .lang-switcher {
+                margin-left: 10px;
+            }
+            .btn-lang {
+                padding: 4px 10px;
+                font-size: 0.7rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -834,7 +863,6 @@
             transform: translateY(0);
         }
 
-        /* ===== ADMIN BADGE ===== */
         .admin-badge {
             background: var(--accent);
             color: #fff;
@@ -845,48 +873,87 @@
             text-transform: uppercase;
             margin-left: 12px;
         }
+
+        /* Notification toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 14px 28px;
+            border-radius: 12px;
+            color: var(--text);
+            font-weight: 500;
+            z-index: 9999;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            max-width: 90%;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.error {
+            border-color: var(--accent);
+        }
+        .toast.success {
+            border-color: #4ade80;
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="toast"></div>
 
     <!-- ===== HEADER ===== -->
     <header>
         <div class="container header-inner">
             <a href="#" class="logo">Design<span>.</span></a>
 
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#portfolio">Жұмыстар</a></li>
-                <li><a href="#testimonials">Пікірлер</a></li>
-                <li><a href="#contact">Байланыс</a></li>
-                <li id="adminNavLink" style="display:none;"><a href="#adminPanel">⚙️ Басқару</a></li>
-            </ul>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#portfolio" data-i18n="nav.works">Жұмыстар</a></li>
+                    <li><a href="#testimonials" data-i18n="nav.reviews">Пікірлер</a></li>
+                    <li><a href="#contact" data-i18n="nav.contact">Байланыс</a></li>
+                    <li id="adminNavLink" style="display:none;"><a href="#adminPanel" data-i18n="nav.admin">⚙️ Басқару</a></li>
+                </ul>
 
-            <button class="hamburger" id="hamburger" aria-label="Мәзір">
-                <span></span><span></span><span></span>
-            </button>
+                <div class="lang-switcher">
+                    <button class="btn-lang active" data-lang="kk">Қаз</button>
+                    <button class="btn-lang" data-lang="ru">Рус</button>
+                </div>
+
+                <button class="hamburger" id="hamburger" aria-label="Мәзір">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- ===== HERO ===== -->
     <section class="hero" id="home">
         <div class="container hero-grid">
-
             <div class="hero-content fade-up">
                 <h1>
-                    Обложка <br />
-                    <span class="highlight">дизайны</span> <br />
-                    сіздің брендіңізге
+                    <span data-i18n="hero.title1">Обложка</span> <br />
+                    <span class="highlight" data-i18n="hero.title2">дизайны</span> <br />
+                    <span data-i18n="hero.title3">сіздің брендіңізге</span>
                 </h1>
-                <p>
+                <p data-i18n="hero.desc">
                     Кітап, музыкалық альбом, журнал немесе кез келген
                     басылымға кәсіби обложкалар жасаймын. Әр жоба — бірегей.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#portfolio" class="btn">
+                    <a href="#portfolio" class="btn" data-i18n="hero.btnWorks">
                         <i class="fas fa-th-large"></i> Жұмыстарды көру
                     </a>
-                    <a href="#contact" class="btn btn-outline">
+                    <a href="#contact" class="btn btn-outline" data-i18n="hero.btnContact">
                         <i class="fas fa-paper-plane"></i> Хат жазу
                     </a>
                 </div>
@@ -894,19 +961,18 @@
                 <div class="hero-stats">
                     <div class="stat">
                         <h3 id="statProjects">120+</h3>
-                        <p>Аяқталған жоба</p>
+                        <p data-i18n="hero.statProjects">Аяқталған жоба</p>
                     </div>
                     <div class="stat">
                         <h3>98%</h3>
-                        <p>Қанағаттану</p>
+                        <p data-i18n="hero.statSatisfaction">Қанағаттану</p>
                     </div>
                     <div class="stat">
                         <h3>4.9</h3>
-                        <p>Орташа рейтинг</p>
+                        <p data-i18n="hero.statRating">Орташа рейтинг</p>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -914,16 +980,13 @@
     <section class="section" id="portfolio">
         <div class="container">
             <div class="section-header fade-up">
-                <h2 class="section-title">Менің жұмыстарым</h2>
-                <p class="section-sub">
+                <h2 class="section-title" data-i18n="portfolio.title">Менің жұмыстарым</h2>
+                <p class="section-sub" data-i18n="portfolio.sub">
                     Әр обложка — бұл көзге көрінетін әңгіме. Төменде соңғы
                     жобаларымнан үзінділер.
                 </p>
             </div>
-
-            <div class="portfolio-grid" id="portfolioGrid">
-                <!-- динамикалық түрде толтырылады -->
-            </div>
+            <div class="portfolio-grid" id="portfolioGrid"></div>
         </div>
     </section>
 
@@ -931,15 +994,12 @@
     <section class="section" id="testimonials" style="background: var(--bg-card);">
         <div class="container">
             <div class="section-header fade-up">
-                <h2 class="section-title">Клиенттер пікірі</h2>
-                <p class="section-sub">
+                <h2 class="section-title" data-i18n="testimonials.title">Клиенттер пікірі</h2>
+                <p class="section-sub" data-i18n="testimonials.sub">
                     Менімен жұмыс істеген адамдар не дейді?
                 </p>
             </div>
-
-            <div class="testimonials-grid" id="testimonialsGrid">
-                <!-- динамикалық түрде толтырылады -->
-            </div>
+            <div class="testimonials-grid" id="testimonialsGrid"></div>
         </div>
     </section>
 
@@ -947,60 +1007,59 @@
     <section class="section" id="adminPanel">
         <div class="container">
             <div class="admin-panel" id="adminPanelContainer">
-                <h2>⚙️ Админ панель <span class="admin-badge">тек сізге</span></h2>
-                <p class="admin-sub">Жұмыстар мен пікірлерді басқарыңыз. Барлық өзгерістер браузеріңізде сақталады.</p>
+                <h2>⚙️ <span data-i18n="admin.title">Админ панель</span> <span class="admin-badge" data-i18n="admin.badge">тек сізге</span></h2>
+                <p class="admin-sub" data-i18n="admin.sub">Жұмыстар мен пікірлерді басқарыңыз. Барлық өзгерістер браузеріңізде сақталады.</p>
 
                 <div class="admin-grid">
-                    <!-- Жаңа жұмыс қосу -->
                     <div class="admin-form-box">
-                        <h3>➕ Жаңа жұмыс қосу</h3>
+                        <h3 data-i18n="admin.addWork">➕ Жаңа жұмыс қосу</h3>
                         <form id="addPortfolioForm" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="pTitle">Атауы</label>
+                                <label for="pTitle" data-i18n="admin.workTitle">Атауы</label>
                                 <input type="text" id="pTitle" placeholder="Мысалы: «Жұлдызды түн»" required />
                             </div>
                             <div class="form-group">
-                                <label for="pDesc">Сипаттама</label>
+                                <label for="pDesc" data-i18n="admin.workDesc">Сипаттама</label>
                                 <input type="text" id="pDesc" placeholder="Мысалы: Поэзия жинағының обложкасы" required />
                             </div>
                             <div class="form-group">
-                                <label for="pBadge">Санат (белгі)</label>
+                                <label for="pBadge" data-i18n="admin.workBadge">Санат (белгі)</label>
                                 <input type="text" id="pBadge" placeholder="Кітап / Музыка / Журнал / Бренд" required />
                             </div>
                             <div class="form-group">
-                                <label for="pIcon">Font Awesome иконкасы (класс)</label>
+                                <label for="pIcon" data-i18n="admin.workIcon">Font Awesome иконкасы (класс)</label>
                                 <input type="text" id="pIcon" placeholder="fa-book-open, fa-headphones, ..." value="fa-layer-group" />
                             </div>
                             <div class="form-group">
-                                <label>Сурет жүктеу (міндетті емес)</label>
+                                <label data-i18n="admin.workImage">Сурет жүктеу (міндетті емес)</label>
                                 <div class="file-input-wrapper">
                                     <input type="file" id="pImage" accept="image/*" />
-                                    <span class="file-label"><i class="fas fa-cloud-upload-alt"></i> Суретті таңдаңыз</span>
+                                    <span class="file-label"><i class="fas fa-cloud-upload-alt"></i> <span data-i18n="admin.workImageLabel">Суретті таңдаңыз</span></span>
                                 </div>
                                 <img id="pImagePreview" class="file-preview" alt="Сурет алдын ала қарау" />
+                                <div id="imageSizeWarning" style="color:var(--accent); font-size:0.8rem; margin-top:4px; display:none;"></div>
                             </div>
-                            <button type="submit" class="btn"><i class="fas fa-plus"></i> Қосу</button>
+                            <button type="submit" class="btn"><i class="fas fa-plus"></i> <span data-i18n="admin.addBtn">Қосу</span></button>
                         </form>
                     </div>
 
-                    <!-- Жаңа пікір қосу -->
                     <div class="admin-form-box">
-                        <h3>➕ Жаңа пікір қосу</h3>
+                        <h3 data-i18n="admin.addReview">➕ Жаңа пікір қосу</h3>
                         <form id="addTestimonialForm">
                             <div class="form-group">
-                                <label for="tName">Аты-жөні</label>
+                                <label for="tName" data-i18n="admin.reviewName">Аты-жөні</label>
                                 <input type="text" id="tName" placeholder="Мысалы: Айгерім Н." required />
                             </div>
                             <div class="form-group">
-                                <label for="tRole">Рөлі</label>
+                                <label for="tRole" data-i18n="admin.reviewRole">Рөлі</label>
                                 <input type="text" id="tRole" placeholder="Жазушы, музыкант, ..." required />
                             </div>
                             <div class="form-group">
-                                <label for="tText">Пікір мәтіні</label>
+                                <label for="tText" data-i18n="admin.reviewText">Пікір мәтіні</label>
                                 <textarea id="tText" placeholder="Пікіріңізді жазыңыз..." required></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="tStars">Жұлдыздар саны (1-5)</label>
+                                <label for="tStars" data-i18n="admin.reviewStars">Жұлдыздар саны (1-5)</label>
                                 <select id="tStars">
                                     <option value="5">5 ★★★★★</option>
                                     <option value="4">4 ★★★★</option>
@@ -1009,14 +1068,13 @@
                                     <option value="1">1 ★</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn"><i class="fas fa-plus"></i> Қосу</button>
+                            <button type="submit" class="btn"><i class="fas fa-plus"></i> <span data-i18n="admin.addBtn">Қосу</span></button>
                         </form>
                     </div>
                 </div>
 
                 <div style="margin-top:24px; text-align:center; color:var(--text-muted); font-size:0.9rem;">
-                    <i class="fas fa-info-circle"></i> Элементтерді өшіру үшін карточканың үстіне апарып, қызыл <i class="fas fa-trash" style="color:#ff6b6b;"></i> батырмасын басыңыз.
-                    <br />Суретті өшіру үшін карточканың үстіне апарып, төменгі оң жақтағы «Суретті өшіру» батырмасын басыңыз.
+                    <i class="fas fa-info-circle"></i> <span data-i18n="admin.hint">Элементтерді өшіру үшін карточканың үстіне апарып, қызыл себет батырмасын басыңыз.</span>
                 </div>
             </div>
         </div>
@@ -1026,8 +1084,8 @@
     <section class="section" id="contact">
         <div class="container">
             <div class="section-header fade-up">
-                <h2 class="section-title">Байланыс</h2>
-                <p class="section-sub">
+                <h2 class="section-title" data-i18n="contact.title">Байланыс</h2>
+                <p class="section-sub" data-i18n="contact.sub">
                     Жобаңызды талқылағыңыз келе ме? Маған хат жазыңыз —
                     мен 24 сағат ішінде жауап беремін.
                 </p>
@@ -1035,12 +1093,11 @@
 
             <div class="contact-wrapper">
                 <div class="contact-info fade-up">
-                    <h3>Сізбен байланысуға <br />қуаныштымын!</h3>
-                    <p>
+                    <h3 data-i18n="contact.infoTitle">Сізбен байланысуға <br />қуаныштымын!</h3>
+                    <p data-i18n="contact.infoDesc">
                         Кез келген сұрақ, идея немесе тапсырыс бойынша
                         хабарласыңыз. Бірге керемет нәрсе жасайық.
                     </p>
-
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
                         <span>design@portfolio.kz</span>
@@ -1058,19 +1115,19 @@
                 <div class="contact-form fade-up">
                     <form id="contactForm" novalidate>
                         <div class="form-group">
-                            <label for="name">Аты-жөні</label>
+                            <label for="name" data-i18n="contact.formName">Аты-жөні</label>
                             <input type="text" id="name" placeholder="Мысалы: Айгерім Нұрланқызы" required />
                         </div>
                         <div class="form-group">
-                            <label for="email">Электрондық пошта</label>
+                            <label for="email" data-i18n="contact.formEmail">Электрондық пошта</label>
                             <input type="email" id="email" placeholder="email@example.com" required />
                         </div>
                         <div class="form-group">
-                            <label for="message">Хабарлама</label>
+                            <label for="message" data-i18n="contact.formMessage">Хабарлама</label>
                             <textarea id="message" placeholder="Жобаңыз туралы айтыңыз..." required></textarea>
                         </div>
                         <button type="submit" class="btn">
-                            <i class="fas fa-paper-plane"></i> Жіберу
+                            <i class="fas fa-paper-plane"></i> <span data-i18n="contact.formBtn">Жіберу</span>
                         </button>
                     </form>
                     <div id="formStatus" style="margin-top:16px; font-weight:500;"></div>
@@ -1088,7 +1145,7 @@
                 <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
                 <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
             </div>
-            <p>&copy; 2026 Design. Барлық құқықтар қорғалған.</p>
+            <p>&copy; 2026 Design. <span data-i18n="footer.rights">Барлық құқықтар қорғалған.</span></p>
         </div>
     </footer>
 
@@ -1097,11 +1154,156 @@
         (function() {
             'use strict';
 
-            // === Admin mode check ===
+            // ===================== i18n =====================
+            const translations = {
+                kk: {
+                    nav: { works: 'Жұмыстар', reviews: 'Пікірлер', contact: 'Байланыс', admin: '⚙️ Басқару' },
+                    hero: {
+                        title1: 'Обложка',
+                        title2: 'дизайны',
+                        title3: 'сіздің брендіңізге',
+                        desc: 'Кітап, музыкалық альбом, журнал немесе кез келген басылымға кәсіби обложкалар жасаймын. Әр жоба — бірегей.',
+                        btnWorks: 'Жұмыстарды көру',
+                        btnContact: 'Хат жазу',
+                        statProjects: 'Аяқталған жоба',
+                        statSatisfaction: 'Қанағаттану',
+                        statRating: 'Орташа рейтинг'
+                    },
+                    portfolio: { title: 'Менің жұмыстарым', sub: 'Әр обложка — бұл көзге көрінетін әңгіме. Төменде соңғы жобаларымнан үзінділер.' },
+                    testimonials: { title: 'Клиенттер пікірі', sub: 'Менімен жұмыс істеген адамдар не дейді?' },
+                    admin: {
+                        title: 'Админ панель',
+                        badge: 'тек сізге',
+                        sub: 'Жұмыстар мен пікірлерді басқарыңыз. Барлық өзгерістер браузеріңізде сақталады.',
+                        addWork: '➕ Жаңа жұмыс қосу',
+                        addReview: '➕ Жаңа пікір қосу',
+                        workTitle: 'Атауы',
+                        workDesc: 'Сипаттама',
+                        workBadge: 'Санат (белгі)',
+                        workIcon: 'Font Awesome иконкасы (класс)',
+                        workImage: 'Сурет жүктеу (міндетті емес)',
+                        workImageLabel: 'Суретті таңдаңыз',
+                        addBtn: 'Қосу',
+                        reviewName: 'Аты-жөні',
+                        reviewRole: 'Рөлі',
+                        reviewText: 'Пікір мәтіні',
+                        reviewStars: 'Жұлдыздар саны (1-5)',
+                        hint: 'Элементтерді өшіру үшін карточканың үстіне апарып, қызыл себет батырмасын басыңыз.'
+                    },
+                    contact: {
+                        title: 'Байланыс',
+                        sub: 'Жобаңызды талқылағыңыз келе ме? Маған хат жазыңыз — мен 24 сағат ішінде жауап беремін.',
+                        infoTitle: 'Сізбен байланысуға қуаныштымын!',
+                        infoDesc: 'Кез келген сұрақ, идея немесе тапсырыс бойынша хабарласыңыз. Бірге керемет нәрсе жасайық.',
+                        formName: 'Аты-жөні',
+                        formEmail: 'Электрондық пошта',
+                        formMessage: 'Хабарлама',
+                        formBtn: 'Жіберу'
+                    },
+                    footer: { rights: 'Барлық құқықтар қорғалған.' }
+                },
+                ru: {
+                    nav: { works: 'Работы', reviews: 'Отзывы', contact: 'Контакты', admin: '⚙️ Управление' },
+                    hero: {
+                        title1: 'Дизайн',
+                        title2: 'обложек',
+                        title3: 'для вашего бренда',
+                        desc: 'Создаю профессиональные обложки для книг, музыкальных альбомов, журналов и любых изданий. Каждый проект — уникален.',
+                        btnWorks: 'Посмотреть работы',
+                        btnContact: 'Написать письмо',
+                        statProjects: 'Завершённых проектов',
+                        statSatisfaction: 'Удовлетворение',
+                        statRating: 'Средний рейтинг'
+                    },
+                    portfolio: { title: 'Мои работы', sub: 'Каждая обложка — это видимая история. Ниже — фрагменты моих последних проектов.' },
+                    testimonials: { title: 'Отзывы клиентов', sub: 'Что говорят люди, работавшие со мной?' },
+                    admin: {
+                        title: 'Админ-панель',
+                        badge: 'только для вас',
+                        sub: 'Управляйте работами и отзывами. Все изменения сохраняются в вашем браузере.',
+                        addWork: '➕ Добавить работу',
+                        addReview: '➕ Добавить отзыв',
+                        workTitle: 'Название',
+                        workDesc: 'Описание',
+                        workBadge: 'Категория (метка)',
+                        workIcon: 'Иконка Font Awesome (класс)',
+                        workImage: 'Загрузить изображение (необязательно)',
+                        workImageLabel: 'Выберите изображение',
+                        addBtn: 'Добавить',
+                        reviewName: 'Имя',
+                        reviewRole: 'Роль',
+                        reviewText: 'Текст отзыва',
+                        reviewStars: 'Количество звёзд (1-5)',
+                        hint: 'Чтобы удалить элемент, наведите на карточку и нажмите красную корзину.'
+                    },
+                    contact: {
+                        title: 'Контакты',
+                        sub: 'Хотите обсудить ваш проект? Напишите мне — я отвечу в течение 24 часов.',
+                        infoTitle: 'Буду рад связаться с вами!',
+                        infoDesc: 'Свяжитесь по любым вопросам, идеям или заказам. Давайте создадим что-то прекрасное вместе.',
+                        formName: 'Имя',
+                        formEmail: 'Электронная почта',
+                        formMessage: 'Сообщение',
+                        formBtn: 'Отправить'
+                    },
+                    footer: { rights: 'Все права защищены.' }
+                }
+            };
+
+            let currentLang = localStorage.getItem('lang') || 'kk';
+
+            function setLanguage(lang) {
+                currentLang = lang;
+                localStorage.setItem('lang', lang);
+
+                // Update all i18n elements
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const keys = el.dataset.i18n.split('.');
+                    let value = translations[lang];
+                    for (const key of keys) {
+                        if (value && value[key] !== undefined) {
+                            value = value[key];
+                        } else {
+                            value = null;
+                            break;
+                        }
+                    }
+                    if (value !== null && value !== undefined) {
+                        // If element contains HTML (e.g., buttons with icons), we only replace text
+                        // For simplicity, we replace innerHTML
+                        el.innerHTML = value;
+                    }
+                });
+
+                // Update active class on language buttons
+                document.querySelectorAll('.btn-lang').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === lang);
+                });
+
+                // Re-render portfolio and testimonials to update dynamic content (if they have i18n keys)
+                // But we handle static text via data-i18n, dynamic content uses translations in JS
+                // We'll re-render to update "no items" messages etc.
+                renderPortfolio();
+                renderTestimonials();
+                updateStats();
+            }
+
+            // ===================== Toast =====================
+            function showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.className = 'toast ' + type + ' show';
+                clearTimeout(toast._hideTimer);
+                toast._hideTimer = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 4000);
+            }
+
+            // ===================== Admin mode =====================
             const urlParams = new URLSearchParams(window.location.search);
             const isAdmin = urlParams.get('admin') === '1';
 
-            // === Default data ===
+            // ===================== Data =====================
             const defaultPortfolio = [
                 { id: 1, title: '«Жұлдызды түн»', desc: 'Поэзия жинағының обложкасы', badge: 'Кітап', icon: 'fa-book-open',
                     image: null },
@@ -1126,15 +1328,10 @@
                     stars: 5 }
             ];
 
-            // === LocalStorage helpers ===
             function getData(key, defaultVal) {
-                try {
-                    const raw = localStorage.getItem(key);
-                    if (raw) {
-                        return JSON.parse(raw);
-                    }
-                } catch (e) {
-                    console.warn('LocalStorage оқу қатесі:', e);
+                const raw = localStorage.getItem(key);
+                if (raw) {
+                    try { return JSON.parse(raw); } catch (e) { /* ignore */ }
                 }
                 return defaultVal;
             }
@@ -1142,32 +1339,34 @@
             function setData(key, data) {
                 try {
                     localStorage.setItem(key, JSON.stringify(data));
+                    return true;
                 } catch (e) {
-                    console.error('LocalStorage сақтау қатесі:', e);
-                    alert('Деректерді сақтау мүмкін болмады. Сурет тым үлкен болуы мүмкін (макс. ~5МБ).');
+                    showToast('Деректерді сақтау мүмкін болмады. Сурет тым үлкен болуы мүмкін (макс. ~5МБ).', 'error');
+                    return false;
                 }
             }
 
             let portfolioItems = getData('portfolioItems', defaultPortfolio);
             let testimonialItems = getData('testimonialItems', defaultTestimonials);
 
-            // === Save functions ===
             function savePortfolio() {
-                setData('portfolioItems', portfolioItems);
+                return setData('portfolioItems', portfolioItems);
             }
 
             function saveTestimonials() {
-                setData('testimonialItems', testimonialItems);
+                return setData('testimonialItems', testimonialItems);
             }
 
-            // === Render functions ===
+            // ===================== Render =====================
             function renderPortfolio() {
                 const grid = document.getElementById('portfolioGrid');
                 if (!grid) return;
 
                 if (portfolioItems.length === 0) {
+                    const emptyMsg = currentLang === 'kk' ? 'Әзірше жұмыс жоқ. Админ панель арқылы қосыңыз.' :
+                        'Пока нет работ. Добавьте через админ-панель.';
                     grid.innerHTML =
-                        `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">Әзірше жұмыс жоқ. Админ панель арқылы қосыңыз.</div>`;
+                        `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">${emptyMsg}</div>`;
                     return;
                 }
 
@@ -1182,7 +1381,6 @@
                         'linear-gradient(135deg, #111827, #1f2937)'
                     ];
                     const bg = colors[index % colors.length];
-
                     const imageHtml = item.image ? `<img src="${item.image}" alt="${item.title}" />` : '';
 
                     html += `
@@ -1192,7 +1390,7 @@
                                 <span class="badge">${item.badge}</span>
                                 <i class="fas ${item.icon || 'fa-layer-group'} overlay-icon"></i>
                                 ${isAdmin ? `<button class="admin-delete-btn" data-id="${item.id}" data-type="portfolio" title="Өшіру"><i class="fas fa-trash"></i></button>` : ''}
-                                ${isAdmin && item.image ? `<button class="admin-remove-img-btn" data-id="${item.id}" data-type="remove-image" title="Суретті өшіру"><i class="fas fa-image"></i> Суретті өшіру</button>` : ''}
+                                ${isAdmin && item.image ? `<button class="admin-remove-img-btn" data-id="${item.id}" data-type="remove-image" title="Суретті өшіру"><i class="fas fa-image"></i> ${currentLang === 'kk' ? 'Суретті өшіру' : 'Удалить изображение'}</button>` : ''}
                             </div>
                             <div class="info">
                                 <h3>${item.title}</h3>
@@ -1202,7 +1400,6 @@
                     `;
                 });
                 grid.innerHTML = html;
-
                 observeFadeElements();
             }
 
@@ -1211,8 +1408,10 @@
                 if (!grid) return;
 
                 if (testimonialItems.length === 0) {
+                    const emptyMsg = currentLang === 'kk' ? 'Пікірлер әзірше жоқ. Бірінші болып қосыңыз!' :
+                        'Отзывов пока нет. Добавьте первый!';
                     grid.innerHTML =
-                        `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">Пікірлер әзірше жоқ. Бірінші болып қосыңыз!</div>`;
+                        `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">${emptyMsg}</div>`;
                     return;
                 }
 
@@ -1237,11 +1436,10 @@
                     `;
                 });
                 grid.innerHTML = html;
-
                 observeFadeElements();
             }
 
-            // === Анимация бақылауышы ===
+            // ===================== Animations =====================
             function observeFadeElements() {
                 const fadeEls = document.querySelectorAll('.fade-up');
                 const observer = new IntersectionObserver((entries) => {
@@ -1250,14 +1448,11 @@
                             entry.target.classList.add('visible');
                         }
                     });
-                }, {
-                    threshold: 0.15,
-                    rootMargin: '0px 0px -40px 0px',
-                });
+                }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
                 fadeEls.forEach(el => observer.observe(el));
             }
 
-            // === Статистиканы жаңарту ===
+            // ===================== Stats =====================
             function updateStats() {
                 const projectsCount = portfolioItems.length;
                 const statEl = document.getElementById('statProjects');
@@ -1266,65 +1461,78 @@
                 }
             }
 
-            // === Admin панельді көрсету ===
+            // ===================== Admin UI =====================
             function toggleAdminUI() {
                 const panel = document.getElementById('adminPanelContainer');
                 const navLink = document.getElementById('adminNavLink');
                 if (isAdmin) {
                     panel.classList.add('visible');
                     navLink.style.display = 'block';
-
-                    document.addEventListener('click', function(e) {
-                        const target = e.target.closest('.admin-delete-btn');
-                        if (target) {
-                            e.preventDefault();
-                            const id = parseInt(target.dataset.id);
-                            const type = target.dataset.type;
-                            if (type === 'portfolio') {
-                                if (confirm('Бұл жұмысты өшіруге сенімдісіз бе?')) {
-                                    portfolioItems = portfolioItems.filter(item => item.id !== id);
-                                    savePortfolio();
-                                    renderPortfolio();
-                                    updateStats();
-                                }
-                            } else if (type === 'testimonial') {
-                                if (confirm('Бұл пікірді өшіруге сенімдісіз бе?')) {
-                                    testimonialItems = testimonialItems.filter(item => item.id !== id);
-                                    saveTestimonials();
-                                    renderTestimonials();
-                                }
-                            }
-                        }
-
-                        const removeImgBtn = e.target.closest('.admin-remove-img-btn');
-                        if (removeImgBtn) {
-                            e.preventDefault();
-                            const id = parseInt(removeImgBtn.dataset.id);
-                            if (confirm('Бұл жұмыстың суретін өшіруге сенімдісіз бе?')) {
-                                const item = portfolioItems.find(i => i.id === id);
-                                if (item) {
-                                    item.image = null;
-                                    savePortfolio();
-                                    renderPortfolio();
-                                }
-                            }
-                        }
-                    });
                 } else {
                     panel.classList.remove('visible');
                     navLink.style.display = 'none';
                 }
             }
 
-            // === Forms ===
+            // ===================== Image compression =====================
+            function compressImage(file, maxSizeMB = 1) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const maxDim = 1200;
+                            if (width > maxDim || height > maxDim) {
+                                const ratio = Math.min(maxDim / width, maxDim / height);
+                                width = Math.round(width * ratio);
+                                height = Math.round(height * ratio);
+                            }
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            let quality = 0.8;
+                            let dataUrl = canvas.toDataURL('image/jpeg', quality);
+                            // Егер өлшем әлі де үлкен болса, сапаны төмендетеміз
+                            while (dataUrl.length > maxSizeMB * 1024 * 1024 && quality > 0.2) {
+                                quality -= 0.1;
+                                dataUrl = canvas.toDataURL('image/jpeg', quality);
+                            }
+                            resolve(dataUrl);
+                        };
+                        img.onerror = reject;
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // ===================== Forms =====================
             function setupForms() {
-                // Суретті алдын ала қарау
+                // Image preview
                 const imageInput = document.getElementById('pImage');
                 const imagePreview = document.getElementById('pImagePreview');
+                const imageWarning = document.getElementById('imageSizeWarning');
+
                 if (imageInput && imagePreview) {
                     imageInput.addEventListener('change', function(e) {
                         const file = this.files[0];
                         if (file) {
+                            if (file.size > 10 * 1024 * 1024) {
+                                imageWarning.textContent = currentLang === 'kk' ?
+                                    'Сурет тым үлкен! Макс. 10 МБ. Өтінеміз, кішірек сурет таңдаңыз.' :
+                                    'Изображение слишком большое! Макс. 10 МБ. Пожалуйста, выберите изображение поменьше.';
+                                imageWarning.style.display = 'block';
+                                this.value = '';
+                                imagePreview.classList.remove('visible');
+                                return;
+                            }
+                            imageWarning.style.display = 'none';
                             const reader = new FileReader();
                             reader.onload = function(event) {
                                 imagePreview.src = event.target.result;
@@ -1333,16 +1541,16 @@
                             reader.readAsDataURL(file);
                         } else {
                             imagePreview.classList.remove('visible');
+                            imageWarning.style.display = 'none';
                         }
                     });
                 }
 
-                // Жаңа жұмыс
+                // Add portfolio
                 const addPortfolioForm = document.getElementById('addPortfolioForm');
                 if (addPortfolioForm) {
-                    addPortfolioForm.addEventListener('submit', function(e) {
+                    addPortfolioForm.addEventListener('submit', async function(e) {
                         e.preventDefault();
-
                         const title = document.getElementById('pTitle').value.trim();
                         const desc = document.getElementById('pDesc').value.trim();
                         const badge = document.getElementById('pBadge').value.trim();
@@ -1350,54 +1558,48 @@
                         const imageFile = document.getElementById('pImage').files[0];
 
                         if (!title || !desc || !badge) {
-                            alert('Барлық мәтіндік өрістерді толтырыңыз!');
+                            const msg = currentLang === 'kk' ? 'Барлық мәтіндік өрістерді толтырыңыз!' :
+                                'Заполните все текстовые поля!';
+                            showToast(msg, 'error');
                             return;
                         }
 
                         const newId = portfolioItems.length ? Math.max(...portfolioItems.map(i => i.id)) + 1 : 1;
 
-                        const processImage = (callback) => {
+                        try {
+                            let imageData = null;
                             if (imageFile) {
-                                const reader = new FileReader();
-                                reader.onload = function(event) {
-                                    callback(event.target.result);
-                                };
-                                reader.onerror = function() {
-                                    callback(null);
-                                };
-                                reader.readAsDataURL(imageFile);
-                            } else {
-                                callback(null);
+                                // Суретті қысу (макс. 1 МБ)
+                                imageData = await compressImage(imageFile, 1);
                             }
-                        };
 
-                        processImage((imageData) => {
-                            const newItem = {
+                            portfolioItems.push({
                                 id: newId,
-                                title: title,
-                                desc: desc,
-                                badge: badge,
-                                icon: icon,
+                                title,
+                                desc,
+                                badge,
+                                icon,
                                 image: imageData
-                            };
+                            });
 
-                            portfolioItems.push(newItem);
-                            savePortfolio();
-                            renderPortfolio();
-                            updateStats();
-
-                            // Форманы тазалау
-                            this.reset();
-                            document.getElementById('pIcon').value = 'fa-layer-group';
-                            imagePreview.classList.remove('visible');
-
-                            // Жетістік туралы хабар
-                            alert('Жұмыс сәтті қосылды!');
-                        });
+                            if (savePortfolio()) {
+                                renderPortfolio();
+                                updateStats();
+                                this.reset();
+                                document.getElementById('pIcon').value = 'fa-layer-group';
+                                imagePreview.classList.remove('visible');
+                                imageWarning.style.display = 'none';
+                                const msg = currentLang === 'kk' ? 'Жұмыс сәтті қосылды!' : 'Работа успешно добавлена!';
+                                showToast(msg, 'success');
+                            }
+                        } catch (err) {
+                            showToast('Суретті өңдеу кезінде қате кетті. Қайталап көріңіз.', 'error');
+                            console.error(err);
+                        }
                     });
                 }
 
-                // Жаңа пікір
+                // Add testimonial
                 const addTestimonialForm = document.getElementById('addTestimonialForm');
                 if (addTestimonialForm) {
                     addTestimonialForm.addEventListener('submit', function(e) {
@@ -1408,22 +1610,25 @@
                         const stars = parseInt(document.getElementById('tStars').value);
 
                         if (!name || !role || !text) {
-                            alert('Барлық өрістерді толтырыңыз!');
+                            const msg = currentLang === 'kk' ? 'Барлық өрістерді толтырыңыз!' :
+                                'Заполните все поля!';
+                            showToast(msg, 'error');
                             return;
                         }
 
-                        const newId = testimonialItems.length ? Math.max(...testimonialItems.map(i => i.id)) + 1 :
-                            1;
+                        const newId = testimonialItems.length ? Math.max(...testimonialItems.map(i => i.id)) + 1 : 1;
                         testimonialItems.push({ id: newId, name, role, text, stars });
-                        saveTestimonials();
-                        renderTestimonials();
-                        this.reset();
-                        alert('Пікір сәтті қосылды!');
+                        if (saveTestimonials()) {
+                            renderTestimonials();
+                            this.reset();
+                            const msg = currentLang === 'kk' ? 'Пікір сәтті қосылды!' : 'Отзыв успешно добавлен!';
+                            showToast(msg, 'success');
+                        }
                     });
                 }
             }
 
-            // === Contact form ===
+            // ===================== Contact form =====================
             function setupContactForm() {
                 const form = document.getElementById('contactForm');
                 const status = document.getElementById('formStatus');
@@ -1435,29 +1640,37 @@
                     const email = document.getElementById('email').value.trim();
                     const message = document.getElementById('message').value.trim();
 
+                    const requiredMsg = currentLang === 'kk' ? 'Барлық өрістерді толтырыңыз.' :
+                        'Заполните все поля.';
+                    const emailMsg = currentLang === 'kk' ? 'Дұрыс электрондық пошта енгізіңіз.' :
+                        'Введите корректный email.';
+
                     if (!name || !email || !message) {
                         status.style.color = '#FF6B6B';
-                        status.textContent = 'Барлық өрістерді толтырыңыз.';
+                        status.textContent = requiredMsg;
                         return;
                     }
                     if (!email.includes('@') || !email.includes('.')) {
                         status.style.color = '#FF6B6B';
-                        status.textContent = 'Дұрыс электрондық пошта енгізіңіз.';
+                        status.textContent = emailMsg;
                         return;
                     }
 
                     status.style.color = '#6C3CE1';
-                    status.textContent = 'Хабарлама жіберілуде...';
+                    const sendingMsg = currentLang === 'kk' ? 'Хабарлама жіберілуде...' : 'Отправка сообщения...';
+                    status.textContent = sendingMsg;
 
                     setTimeout(() => {
+                        const successMsg = currentLang === 'kk' ? '✅ Хабарламаңыз сәтті жіберілді! Рахмет.' :
+                            '✅ Ваше сообщение успешно отправлено! Спасибо.';
                         status.style.color = '#4ade80';
-                        status.textContent = '✅ Хабарламаңыз сәтті жіберілді! Рахмет.';
+                        status.textContent = successMsg;
                         form.reset();
                     }, 1200);
                 });
             }
 
-            // === Mobile menu ===
+            // ===================== Mobile menu =====================
             function setupMobileMenu() {
                 const hamburger = document.getElementById('hamburger');
                 const navLinks = document.getElementById('navLinks');
@@ -1473,20 +1686,77 @@
                 }
             }
 
-            // === Header shadow ===
+            // ===================== Header shadow =====================
             function setupHeaderShadow() {
                 const header = document.querySelector('header');
                 window.addEventListener('scroll', () => {
-                    if (window.scrollY > 60) {
-                        header.style.boxShadow = '0 8px 40px rgba(0,0,0,0.5)';
-                    } else {
-                        header.style.boxShadow = 'none';
+                    header.style.boxShadow = window.scrollY > 60 ? '0 8px 40px rgba(0,0,0,0.5)' : 'none';
+                });
+            }
+
+            // ===================== Delete handlers (admin) =====================
+            function setupDeleteHandlers() {
+                document.addEventListener('click', function(e) {
+                    const target = e.target.closest('.admin-delete-btn');
+                    if (target) {
+                        e.preventDefault();
+                        const id = parseInt(target.dataset.id);
+                        const type = target.dataset.type;
+                        const confirmMsg = currentLang === 'kk' ? 'Бұл элементті өшіруге сенімдісіз бе?' :
+                            'Вы уверены, что хотите удалить этот элемент?';
+                        if (!confirm(confirmMsg)) return;
+
+                        if (type === 'portfolio') {
+                            portfolioItems = portfolioItems.filter(item => item.id !== id);
+                            if (savePortfolio()) {
+                                renderPortfolio();
+                                updateStats();
+                                showToast(currentLang === 'kk' ? 'Жұмыс өшірілді.' : 'Работа удалена.', 'success');
+                            }
+                        } else if (type === 'testimonial') {
+                            testimonialItems = testimonialItems.filter(item => item.id !== id);
+                            if (saveTestimonials()) {
+                                renderTestimonials();
+                                showToast(currentLang === 'kk' ? 'Пікір өшірілді.' : 'Отзыв удалён.', 'success');
+                            }
+                        }
+                    }
+
+                    // Remove image
+                    const removeImgBtn = e.target.closest('.admin-remove-img-btn');
+                    if (removeImgBtn) {
+                        e.preventDefault();
+                        const id = parseInt(removeImgBtn.dataset.id);
+                        const confirmMsg = currentLang === 'kk' ? 'Суретті өшіруге сенімдісіз бе?' :
+                            'Вы уверены, что хотите удалить изображение?';
+                        if (!confirm(confirmMsg)) return;
+
+                        const item = portfolioItems.find(i => i.id === id);
+                        if (item) {
+                            item.image = null;
+                            if (savePortfolio()) {
+                                renderPortfolio();
+                                showToast(currentLang === 'kk' ? 'Сурет өшірілді.' : 'Изображение удалено.',
+                                'success');
+                            }
+                        }
                     }
                 });
             }
 
-            // === Initialize ===
+            // ===================== Language switcher =====================
+            function setupLanguageSwitcher() {
+                document.querySelectorAll('.btn-lang').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const lang = this.dataset.lang;
+                        setLanguage(lang);
+                    });
+                });
+            }
+
+            // ===================== Init =====================
             function init() {
+                setLanguage(currentLang);
                 renderPortfolio();
                 renderTestimonials();
                 updateStats();
@@ -1495,11 +1765,9 @@
                 setupContactForm();
                 setupMobileMenu();
                 setupHeaderShadow();
+                setupDeleteHandlers();
+                setupLanguageSwitcher();
                 observeFadeElements();
-
-                // Консольге ағымдағы деректерді шығару (тексеру үшін)
-                console.log('Portfolio items:', portfolioItems);
-                console.log('Testimonial items:', testimonialItems);
             }
 
             document.addEventListener('DOMContentLoaded', init);
