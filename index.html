@@ -1046,7 +1046,7 @@
         </div>
     </section>
 
-    <!-- ===== CONTACT (ӨЗГЕРТІЛГЕН ФОРМА) ===== -->
+    <!-- ===== CONTACT (өзгертілген форма) ===== -->
     <section class="section" id="contact">
         <div class="container">
             <div class="section-header fade-up">
@@ -1078,7 +1078,7 @@
                     </div>
                 </div>
 
-                <!-- ЖАҢА ФОРМА (тек 3 өріс) -->
+                <!-- ЖАҢА ФОРМА: тек 3 өріс -->
                 <div class="contact-form fade-up">
                     <form id="contactForm" novalidate>
                         <div class="form-group">
@@ -1545,19 +1545,32 @@
                 const status = document.getElementById('formStatus');
                 if (!form) return;
 
+                const nameInput = document.getElementById('contactName');
+                const subjectInput = document.getElementById('contactSubject');
+                const messageInput = document.getElementById('contactMessage');
+
                 // Сақталған мәліметтерді толтыру
                 const savedName = localStorage.getItem('contactName') || '';
                 const savedSubject = localStorage.getItem('contactSubject') || '';
                 const savedMessage = localStorage.getItem('contactMessage') || '';
-                document.getElementById('contactName').value = savedName;
-                document.getElementById('contactSubject').value = savedSubject;
-                document.getElementById('contactMessage').value = savedMessage;
+                nameInput.value = savedName;
+                subjectInput.value = savedSubject;
+                messageInput.value = savedMessage;
+
+                // Әрбір өзгеріс кезінде сақтау
+                [nameInput, subjectInput, messageInput].forEach(input => {
+                    input.addEventListener('input', function() {
+                        localStorage.setItem('contactName', nameInput.value);
+                        localStorage.setItem('contactSubject', subjectInput.value);
+                        localStorage.setItem('contactMessage', messageInput.value);
+                    });
+                });
 
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    const name = document.getElementById('contactName').value.trim();
-                    const subject = document.getElementById('contactSubject').value.trim();
-                    const message = document.getElementById('contactMessage').value.trim();
+                    const name = nameInput.value.trim();
+                    const subject = subjectInput.value.trim();
+                    const message = messageInput.value.trim();
 
                     if (!name || !subject || !message) {
                         status.style.color = '#FF6B6B';
@@ -1565,16 +1578,12 @@
                         return;
                     }
 
-                    // Сақтау
-                    localStorage.setItem('contactName', name);
-                    localStorage.setItem('contactSubject', subject);
-                    localStorage.setItem('contactMessage', message);
-
                     // mailto сілтемесі
                     const mailtoLink =
                         `mailto:bekzatshemetaev24@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Аты-жөні: ' + name + '\n\nХабарлама:\n' + message)}`;
 
-                    window.open(mailtoLink, '_blank');
+                    // Ағымдағы бетті mailto-ға бағыттау
+                    window.location.href = mailtoLink;
 
                     status.style.color = '#4ade80';
                     status.textContent = '✅ Хат дайын. Поштаңызды тексеріп, жіберіңіз.';
