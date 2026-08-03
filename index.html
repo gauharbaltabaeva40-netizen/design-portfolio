@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Портфолио | Обложка жасау + Админ панель</title>
+    <title>Портфолио | Обложка жасау + Админ панель (сурет жүктеу)</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -346,12 +346,22 @@
             overflow: hidden;
         }
 
+        .portfolio-item .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
         .portfolio-item .thumb .overlay-icon {
             font-size: 4rem;
             color: rgba(255, 255, 255, 0.08);
             position: absolute;
             right: 16px;
             bottom: 16px;
+            z-index: 1;
         }
 
         .portfolio-item .thumb .badge {
@@ -365,6 +375,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            z-index: 2;
         }
 
         .portfolio-item .info {
@@ -394,7 +405,7 @@
             font-size: 1rem;
             cursor: pointer;
             transition: var(--transition);
-            z-index: 5;
+            z-index: 10;
             opacity: 0;
             display: flex;
             align-items: center;
@@ -407,6 +418,30 @@
         .admin-delete-btn:hover {
             background: #ff4444;
             transform: scale(1.1);
+        }
+
+        /* remove image button (admin only) */
+        .admin-remove-img-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+            opacity: 0;
+            backdrop-filter: blur(4px);
+        }
+        .portfolio-item:hover .admin-remove-img-btn {
+            opacity: 1;
+        }
+        .admin-remove-img-btn:hover {
+            background: rgba(255, 107, 107, 0.9);
         }
 
         /* ===== TESTIMONIALS ===== */
@@ -544,6 +579,51 @@
             width: 100%;
             justify-content: center;
             margin-top: 4px;
+        }
+
+        /* file input styling */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .file-input-wrapper .file-label {
+            display: block;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 2px dashed var(--border);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        .file-input-wrapper .file-label:hover {
+            border-color: var(--primary);
+            color: var(--text);
+        }
+        .file-input-wrapper .file-label i {
+            margin-right: 8px;
+        }
+        .file-preview {
+            margin-top: 8px;
+            max-width: 100%;
+            max-height: 80px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: none;
+        }
+        .file-preview.visible {
+            display: block;
         }
 
         /* ===== CONTACT ===== */
@@ -788,7 +868,7 @@
         </div>
     </header>
 
-    <!-- ===== HERO (карточкасыз) ===== -->
+    <!-- ===== HERO ===== -->
     <section class="hero" id="home">
         <div class="container hero-grid">
 
@@ -863,7 +943,7 @@
         </div>
     </section>
 
-    <!-- ===== ADMIN PANEL (тек ?admin=1 кезінде) ===== -->
+    <!-- ===== ADMIN PANEL ===== -->
     <section class="section" id="adminPanel">
         <div class="container">
             <div class="admin-panel" id="adminPanelContainer">
@@ -874,7 +954,7 @@
                     <!-- Жаңа жұмыс қосу -->
                     <div class="admin-form-box">
                         <h3>➕ Жаңа жұмыс қосу</h3>
-                        <form id="addPortfolioForm">
+                        <form id="addPortfolioForm" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="pTitle">Атауы</label>
                                 <input type="text" id="pTitle" placeholder="Мысалы: «Жұлдызды түн»" required />
@@ -890,6 +970,14 @@
                             <div class="form-group">
                                 <label for="pIcon">Font Awesome иконкасы (класс)</label>
                                 <input type="text" id="pIcon" placeholder="fa-book-open, fa-headphones, ..." value="fa-layer-group" />
+                            </div>
+                            <div class="form-group">
+                                <label>Сурет жүктеу (міндетті емес)</label>
+                                <div class="file-input-wrapper">
+                                    <input type="file" id="pImage" accept="image/*" />
+                                    <span class="file-label"><i class="fas fa-cloud-upload-alt"></i> Суретті таңдаңыз</span>
+                                </div>
+                                <img id="pImagePreview" class="file-preview" alt="Сурет алдын ала қарау" />
                             </div>
                             <button type="submit" class="btn"><i class="fas fa-plus"></i> Қосу</button>
                         </form>
@@ -928,6 +1016,7 @@
 
                 <div style="margin-top:24px; text-align:center; color:var(--text-muted); font-size:0.9rem;">
                     <i class="fas fa-info-circle"></i> Элементтерді өшіру үшін карточканың үстіне апарып, қызыл <i class="fas fa-trash" style="color:#ff6b6b;"></i> батырмасын басыңыз.
+                    <br />Суретті өшіру үшін карточканың үстіне апарып, төменгі оң жақтағы «Суретті өшіру» батырмасын басыңыз.
                 </div>
             </div>
         </div>
@@ -1014,12 +1103,18 @@
 
             // === Default data (егер LocalStorage бос болса) ===
             const defaultPortfolio = [
-                { id: 1, title: '«Жұлдызды түн»', desc: 'Поэзия жинағының обложкасы', badge: 'Кітап', icon: 'fa-book-open' },
-                { id: 2, title: '«Urban Echo»', desc: 'Электронды альбом обложкасы', badge: 'Музыка', icon: 'fa-headphones' },
-                { id: 3, title: '«Nomad Life»', desc: 'Журналдың мұқабасы', badge: 'Журнал', icon: 'fa-newspaper' },
-                { id: 4, title: '«Aura»', desc: 'Косметика брендінің обложкасы', badge: 'Бренд', icon: 'fa-palette' },
-                { id: 5, title: '«Дала самалы»', desc: 'Прозалық кітап обложкасы', badge: 'Кітап', icon: 'fa-scroll' },
-                { id: 6, title: '«Acoustic Dreams»', desc: 'Акустикалық альбом обложкасы', badge: 'Музыка', icon: 'fa-guitar' }
+                { id: 1, title: '«Жұлдызды түн»', desc: 'Поэзия жинағының обложкасы', badge: 'Кітап', icon: 'fa-book-open',
+                    image: null },
+                { id: 2, title: '«Urban Echo»', desc: 'Электронды альбом обложкасы', badge: 'Музыка',
+                    icon: 'fa-headphones', image: null },
+                { id: 3, title: '«Nomad Life»', desc: 'Журналдың мұқабасы', badge: 'Журнал', icon: 'fa-newspaper',
+                    image: null },
+                { id: 4, title: '«Aura»', desc: 'Косметика брендінің обложкасы', badge: 'Бренд', icon: 'fa-palette',
+                    image: null },
+                { id: 5, title: '«Дала самалы»', desc: 'Прозалық кітап обложкасы', badge: 'Кітап', icon: 'fa-scroll',
+                    image: null },
+                { id: 6, title: '«Acoustic Dreams»', desc: 'Акустикалық альбом обложкасы', badge: 'Музыка',
+                    icon: 'fa-guitar', image: null }
             ];
 
             const defaultTestimonials = [
@@ -1079,12 +1174,17 @@
                     ];
                     const bg = colors[index % colors.length];
 
+                    // Егер сурет болса, оны көрсетеміз, әйтпесе градиент
+                    const imageHtml = item.image ? `<img src="${item.image}" alt="${item.title}" />` : '';
+
                     html += `
                         <div class="portfolio-item fade-up" style="transition-delay:${index * 0.05}s;">
-                            <div class="thumb" style="background:${bg};">
+                            <div class="thumb" style="${item.image ? '' : `background:${bg};`}">
+                                ${imageHtml}
                                 <span class="badge">${item.badge}</span>
                                 <i class="fas ${item.icon || 'fa-layer-group'} overlay-icon"></i>
                                 ${isAdmin ? `<button class="admin-delete-btn" data-id="${item.id}" data-type="portfolio" title="Өшіру"><i class="fas fa-trash"></i></button>` : ''}
+                                ${isAdmin && item.image ? `<button class="admin-remove-img-btn" data-id="${item.id}" data-type="remove-image" title="Суретті өшіру"><i class="fas fa-image"></i> Суретті өшіру</button>` : ''}
                             </div>
                             <div class="info">
                                 <h3>${item.title}</h3>
@@ -1165,7 +1265,10 @@
                 if (isAdmin) {
                     panel.classList.add('visible');
                     navLink.style.display = 'block';
+
+                    // Кликтерді өңдеу (өшіру, суретті өшіру)
                     document.addEventListener('click', function(e) {
+                        // Әдеттегі өшіру
                         const target = e.target.closest('.admin-delete-btn');
                         if (target) {
                             e.preventDefault();
@@ -1186,6 +1289,21 @@
                                 }
                             }
                         }
+
+                        // Суретті өшіру
+                        const removeImgBtn = e.target.closest('.admin-remove-img-btn');
+                        if (removeImgBtn) {
+                            e.preventDefault();
+                            const id = parseInt(removeImgBtn.dataset.id);
+                            if (confirm('Бұл жұмыстың суретін өшіруге сенімдісіз бе?')) {
+                                const item = portfolioItems.find(i => i.id === id);
+                                if (item) {
+                                    item.image = null;
+                                    savePortfolio();
+                                    renderPortfolio();
+                                }
+                            }
+                        }
                     });
                 } else {
                     panel.classList.remove('visible');
@@ -1195,6 +1313,26 @@
 
             // === Forms ===
             function setupForms() {
+                // Суретті алдын ала қарау
+                const imageInput = document.getElementById('pImage');
+                const imagePreview = document.getElementById('pImagePreview');
+                if (imageInput && imagePreview) {
+                    imageInput.addEventListener('change', function(e) {
+                        const file = this.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                imagePreview.src = event.target.result;
+                                imagePreview.classList.add('visible');
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            imagePreview.classList.remove('visible');
+                        }
+                    });
+                }
+
+                // Жаңа жұмыс
                 const addPortfolioForm = document.getElementById('addPortfolioForm');
                 if (addPortfolioForm) {
                     addPortfolioForm.addEventListener('submit', function(e) {
@@ -1203,22 +1341,48 @@
                         const desc = document.getElementById('pDesc').value.trim();
                         const badge = document.getElementById('pBadge').value.trim();
                         const icon = document.getElementById('pIcon').value.trim() || 'fa-layer-group';
+                        const imageFile = document.getElementById('pImage').files[0];
 
                         if (!title || !desc || !badge) {
-                            alert('Барлық өрістерді толтырыңыз!');
+                            alert('Барлық мәтіндік өрістерді толтырыңыз!');
                             return;
                         }
 
                         const newId = portfolioItems.length ? Math.max(...portfolioItems.map(i => i.id)) + 1 : 1;
-                        portfolioItems.push({ id: newId, title, desc, badge, icon });
-                        savePortfolio();
-                        renderPortfolio();
-                        updateStats();
-                        this.reset();
-                        document.getElementById('pIcon').value = 'fa-layer-group';
+
+                        // Егер сурет жүктелсе, оны Base64-ге түрлендіреміз
+                        const processImage = (callback) => {
+                            if (imageFile) {
+                                const reader = new FileReader();
+                                reader.onload = function(event) {
+                                    callback(event.target.result);
+                                };
+                                reader.readAsDataURL(imageFile);
+                            } else {
+                                callback(null);
+                            }
+                        };
+
+                        processImage((imageData) => {
+                            portfolioItems.push({
+                                id: newId,
+                                title,
+                                desc,
+                                badge,
+                                icon,
+                                image: imageData
+                            });
+                            savePortfolio();
+                            renderPortfolio();
+                            updateStats();
+                            this.reset();
+                            document.getElementById('pIcon').value = 'fa-layer-group';
+                            imagePreview.classList.remove('visible');
+                        });
                     });
                 }
 
+                // Жаңа пікір
                 const addTestimonialForm = document.getElementById('addTestimonialForm');
                 if (addTestimonialForm) {
                     addTestimonialForm.addEventListener('submit', function(e) {
