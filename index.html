@@ -1046,7 +1046,7 @@
         </div>
     </section>
 
-    <!-- ===== CONTACT (өзгертілген форма) ===== -->
+    <!-- ===== CONTACT (WhatsApp арқылы жіберу) ===== -->
     <section class="section" id="contact">
         <div class="container">
             <div class="section-header fade-up">
@@ -1070,15 +1070,15 @@
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <span>+7 (777) 123-45-67</span>
+                        <span>+7 (705) 297-3225</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>Алматы, Қазақстан</span>
+                        <span>Астана</span>
                     </div>
                 </div>
 
-                <!-- ЖАҢА ФОРМА: тек 3 өріс -->
+                <!-- Жаңа форма: WhatsApp-қа жіберу -->
                 <div class="contact-form fade-up">
                     <form id="contactForm" novalidate>
                         <div class="form-group">
@@ -1094,7 +1094,7 @@
                             <textarea id="contactMessage" placeholder="Жобаңыз туралы айтыңыз..." required></textarea>
                         </div>
                         <button type="submit" class="btn" data-key="contactFormSend">
-                            <i class="fas fa-paper-plane"></i> Жіберу
+                            <i class="fab fa-whatsapp"></i> WhatsApp-қа жіберу
                         </button>
                     </form>
                     <div id="formStatus" style="margin-top:16px; font-weight:500;"></div>
@@ -1167,7 +1167,7 @@
                     contactFormName: 'Аты-жөні',
                     contactFormSubject: 'Тақырып',
                     contactFormMessage: 'Хабарлама',
-                    contactFormSend: 'Жіберу',
+                    contactFormSend: 'WhatsApp-қа жіберу',
                     footerText: '© 2026 Design. Барлық құқықтар қорғалған.'
                 },
                 ru: {
@@ -1214,7 +1214,7 @@
                     contactFormName: 'Имя',
                     contactFormSubject: 'Тема',
                     contactFormMessage: 'Сообщение',
-                    contactFormSend: 'Отправить',
+                    contactFormSend: 'Отправить в WhatsApp',
                     footerText: '© 2026 Design. Все права защищены.'
                 }
             };
@@ -1539,7 +1539,7 @@
                 });
             }
 
-            // ========== БАЙЛАНЫС ФОРМАСЫ (mailto) ==========
+            // ========== БАЙЛАНЫС ФОРМАСЫ (WhatsApp) ==========
             function setupContactForm() {
                 const form = document.getElementById('contactForm');
                 const status = document.getElementById('formStatus');
@@ -1578,15 +1578,19 @@
                         return;
                     }
 
-                    // mailto сілтемесі
-                    const mailtoLink =
-                        `mailto:bekzatshemetaev24@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Аты-жөні: ' + name + '\n\nХабарлама:\n' + message)}`;
+                    // WhatsApp нөмірі (халықаралық форматта)
+                    const phone = '77052973225'; // +7 705 297 3225
 
-                    // Ағымдағы бетті mailto-ға бағыттау
-                    window.location.href = mailtoLink;
+                    // Хабарлама мәтінін құрастыру (клиенттің email және қаласы қосылды)
+                    const text = `Аты-жөні: ${name}\nТақырып: ${subject}\nХабарлама: ${message}\n\nEmail: bekzatshemetaev24@gmail.com\nҚала: Астана`;
+
+                    const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+
+                    // Жаңа терезеде ашу
+                    window.open(waLink, '_blank');
 
                     status.style.color = '#4ade80';
-                    status.textContent = '✅ Хат дайын. Поштаңызды тексеріп, жіберіңіз.';
+                    status.textContent = '✅ Хабарлама WhatsApp-қа дайындалды. Жіберу үшін Enter басыңыз.';
                 });
             }
 
