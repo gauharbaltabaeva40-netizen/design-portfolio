@@ -511,7 +511,6 @@
             border: 2px solid var(--primary);
             border-radius: var(--radius);
             display: none;
-            /* hidden by default */;
         }
         .admin-panel.visible {
             display: block;
@@ -581,7 +580,6 @@
             margin-top: 4px;
         }
 
-        /* file input styling */
         .file-input-wrapper {
             position: relative;
             overflow: hidden;
@@ -834,7 +832,6 @@
             transform: translateY(0);
         }
 
-        /* ===== ADMIN BADGE ===== */
         .admin-badge {
             background: var(--accent);
             color: #fff;
@@ -954,7 +951,7 @@
                     <!-- Жаңа жұмыс қосу -->
                     <div class="admin-form-box">
                         <h3>➕ Жаңа жұмыс қосу</h3>
-                        <form id="addPortfolioForm" enctype="multipart/form-data">
+                        <form id="addPortfolioForm">
                             <div class="form-group">
                                 <label for="pTitle">Атауы</label>
                                 <input type="text" id="pTitle" placeholder="Мысалы: «Жұлдызды түн»" required />
@@ -1174,7 +1171,6 @@
                     ];
                     const bg = colors[index % colors.length];
 
-                    // Егер сурет болса, оны көрсетеміз, әйтпесе градиент
                     const imageHtml = item.image ? `<img src="${item.image}" alt="${item.title}" />` : '';
 
                     html += `
@@ -1337,6 +1333,7 @@
                 if (addPortfolioForm) {
                     addPortfolioForm.addEventListener('submit', function(e) {
                         e.preventDefault();
+
                         const title = document.getElementById('pTitle').value.trim();
                         const desc = document.getElementById('pDesc').value.trim();
                         const badge = document.getElementById('pBadge').value.trim();
@@ -1357,6 +1354,9 @@
                                 reader.onload = function(event) {
                                     callback(event.target.result);
                                 };
+                                reader.onerror = function() {
+                                    callback(null);
+                                };
                                 reader.readAsDataURL(imageFile);
                             } else {
                                 callback(null);
@@ -1364,18 +1364,21 @@
                         };
 
                         processImage((imageData) => {
-                            portfolioItems.push({
+                            const newItem = {
                                 id: newId,
-                                title,
-                                desc,
-                                badge,
-                                icon,
+                                title: title,
+                                desc: desc,
+                                badge: badge,
+                                icon: icon,
                                 image: imageData
-                            });
+                            };
+                            portfolioItems.push(newItem);
                             savePortfolio();
                             renderPortfolio();
                             updateStats();
-                            this.reset();
+
+                            // Форманы тазалау
+                            document.getElementById('addPortfolioForm').reset();
                             document.getElementById('pIcon').value = 'fa-layer-group';
                             imagePreview.classList.remove('visible');
                         });
