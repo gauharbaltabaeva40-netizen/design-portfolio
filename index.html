@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Портфолио | Обложка жасау + Админ панель</title>
+    <title>Портфолио | Обложка жасау</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -128,26 +128,26 @@
         .lang-switcher {
             display: flex;
             gap: 6px;
+            align-items: center;
             margin-left: 20px;
         }
-        .lang-btn {
+        .lang-switcher button {
             background: transparent;
             border: 1px solid var(--border);
             color: var(--text-muted);
             padding: 4px 12px;
             border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
+            cursor: pointer;
             transition: var(--transition);
-            font-family: inherit;
         }
-        .lang-btn:hover {
-            border-color: var(--primary);
-            color: #fff;
-        }
-        .lang-btn.active {
+        .lang-switcher button.active {
             background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .lang-switcher button:hover {
             border-color: var(--primary);
             color: #fff;
         }
@@ -170,8 +170,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
         }
 
         .logo {
@@ -211,6 +209,9 @@
         }
         .nav-links a:hover::after {
             width: 100%;
+        }
+        .nav-links .lang-switcher {
+            margin-left: 0;
         }
 
         .hamburger {
@@ -807,9 +808,6 @@
             .hamburger {
                 display: flex;
             }
-            .lang-switcher {
-                margin-left: 0;
-            }
 
             .hero {
                 padding: 120px 0 60px;
@@ -832,6 +830,9 @@
             }
             .contact-form {
                 padding: 28px 20px;
+            }
+            .lang-switcher {
+                margin-left: 0;
             }
         }
 
@@ -885,16 +886,15 @@
             <a href="#" class="logo">Design<span>.</span></a>
 
             <ul class="nav-links" id="navLinks">
-                <li><a href="#portfolio" data-key="navPortfolio">Жұмыстар</a></li>
+                <li><a href="#portfolio" data-key="navWork">Жұмыстар</a></li>
                 <li><a href="#testimonials" data-key="navReviews">Пікірлер</a></li>
                 <li><a href="#contact" data-key="navContact">Байланыс</a></li>
-                <li id="adminNavLink" style="display:none;"><a href="#adminPanel">⚙️ Басқару</a></li>
+                <li id="adminNavLink" style="display:none;"><a href="#adminPanel" data-key="navAdmin">⚙️ Басқару</a></li>
+                <li class="lang-switcher" id="langSwitcher">
+                    <button class="active" data-lang="kk">Қаз</button>
+                    <button data-lang="ru">Рус</button>
+                </li>
             </ul>
-
-            <div class="lang-switcher">
-                <button class="lang-btn active" data-lang="kk">Қаз</button>
-                <button class="lang-btn" data-lang="ru">Рус</button>
-            </div>
 
             <button class="hamburger" id="hamburger" aria-label="Мәзір">
                 <span></span><span></span><span></span>
@@ -905,7 +905,6 @@
     <!-- ===== HERO ===== -->
     <section class="hero" id="home">
         <div class="container hero-grid">
-
             <div class="hero-content fade-up">
                 <h1>
                     <span data-key="heroTitle1">Обложка</span> <br />
@@ -917,7 +916,7 @@
                     басылымға кәсіби обложкалар жасаймын. Әр жоба — бірегей.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#portfolio" class="btn" data-key="heroBtnWorks">
+                    <a href="#portfolio" class="btn" data-key="heroBtnWork">
                         <i class="fas fa-th-large"></i> Жұмыстарды көру
                     </a>
                     <a href="#contact" class="btn btn-outline" data-key="heroBtnContact">
@@ -928,7 +927,7 @@
                 <div class="hero-stats">
                     <div class="stat">
                         <h3 id="statProjects">120+</h3>
-                        <p data-key="statProjects">Аяқталған жоба</p>
+                        <p data-key="statProjectsLabel">Аяқталған жоба</p>
                     </div>
                     <div class="stat">
                         <h3>98%</h3>
@@ -940,7 +939,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -949,15 +947,12 @@
         <div class="container">
             <div class="section-header fade-up">
                 <h2 class="section-title" data-key="portfolioTitle">Менің жұмыстарым</h2>
-                <p class="section-sub" data-key="portfolioDesc">
+                <p class="section-sub" data-key="portfolioSub">
                     Әр обложка — бұл көзге көрінетін әңгіме. Төменде соңғы
                     жобаларымнан үзінділер.
                 </p>
             </div>
-
-            <div class="portfolio-grid" id="portfolioGrid">
-                <!-- динамикалық түрде толтырылады -->
-            </div>
+            <div class="portfolio-grid" id="portfolioGrid"></div>
         </div>
     </section>
 
@@ -966,14 +961,11 @@
         <div class="container">
             <div class="section-header fade-up">
                 <h2 class="section-title" data-key="testimonialsTitle">Клиенттер пікірі</h2>
-                <p class="section-sub" data-key="testimonialsDesc">
+                <p class="section-sub" data-key="testimonialsSub">
                     Менімен жұмыс істеген адамдар не дейді?
                 </p>
             </div>
-
-            <div class="testimonials-grid" id="testimonialsGrid">
-                <!-- динамикалық түрде толтырылады -->
-            </div>
+            <div class="testimonials-grid" id="testimonialsGrid"></div>
         </div>
     </section>
 
@@ -981,7 +973,7 @@
     <section class="section" id="adminPanel">
         <div class="container">
             <div class="admin-panel" id="adminPanelContainer">
-                <h2>⚙️ <span data-key="adminTitle">Админ панель</span> <span class="admin-badge">тек сізге</span></h2>
+                <h2 data-key="adminTitle">⚙️ Админ панель <span class="admin-badge">тек сізге</span></h2>
                 <p class="admin-sub" data-key="adminSub">Жұмыстар мен пікірлерді басқарыңыз. Барлық өзгерістер браузеріңізде сақталады.</p>
 
                 <div class="admin-grid">
@@ -989,19 +981,19 @@
                         <h3 data-key="adminAddWork">➕ Жаңа жұмыс қосу</h3>
                         <form id="addPortfolioForm" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="pTitle" data-key="adminWorkTitle">Атауы</label>
+                                <label data-key="adminWorkTitle">Атауы</label>
                                 <input type="text" id="pTitle" placeholder="Мысалы: «Жұлдызды түн»" required />
                             </div>
                             <div class="form-group">
-                                <label for="pDesc" data-key="adminWorkDesc">Сипаттама</label>
+                                <label data-key="adminWorkDesc">Сипаттама</label>
                                 <input type="text" id="pDesc" placeholder="Мысалы: Поэзия жинағының обложкасы" required />
                             </div>
                             <div class="form-group">
-                                <label for="pBadge" data-key="adminWorkBadge">Санат (белгі)</label>
+                                <label data-key="adminWorkBadge">Санат (белгі)</label>
                                 <input type="text" id="pBadge" placeholder="Кітап / Музыка / Журнал / Бренд" required />
                             </div>
                             <div class="form-group">
-                                <label for="pIcon" data-key="adminWorkIcon">Font Awesome иконкасы (класс)</label>
+                                <label data-key="adminWorkIcon">Font Awesome иконкасы (класс)</label>
                                 <input type="text" id="pIcon" placeholder="fa-book-open, fa-headphones, ..." value="fa-layer-group" />
                             </div>
                             <div class="form-group">
@@ -1020,19 +1012,19 @@
                         <h3 data-key="adminAddReview">➕ Жаңа пікір қосу</h3>
                         <form id="addTestimonialForm">
                             <div class="form-group">
-                                <label for="tName" data-key="adminReviewName">Аты-жөні</label>
+                                <label data-key="adminReviewName">Аты-жөні</label>
                                 <input type="text" id="tName" placeholder="Мысалы: Айгерім Н." required />
                             </div>
                             <div class="form-group">
-                                <label for="tRole" data-key="adminReviewRole">Рөлі</label>
+                                <label data-key="adminReviewRole">Рөлі</label>
                                 <input type="text" id="tRole" placeholder="Жазушы, музыкант, ..." required />
                             </div>
                             <div class="form-group">
-                                <label for="tText" data-key="adminReviewText">Пікір мәтіні</label>
+                                <label data-key="adminReviewText">Пікір мәтіні</label>
                                 <textarea id="tText" placeholder="Пікіріңізді жазыңыз..." required></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="tStars" data-key="adminReviewStars">Жұлдыздар саны (1-5)</label>
+                                <label data-key="adminReviewStars">Жұлдыздар саны (1-5)</label>
                                 <select id="tStars">
                                     <option value="5">5 ★★★★★</option>
                                     <option value="4">4 ★★★★</option>
@@ -1047,8 +1039,8 @@
                 </div>
 
                 <div style="margin-top:24px; text-align:center; color:var(--text-muted); font-size:0.9rem;">
-                    <i class="fas fa-info-circle"></i> <span data-key="adminDeleteHint">Элементтерді өшіру үшін карточканың үстіне апарып, қызыл <i class="fas fa-trash" style="color:#ff6b6b;"></i> батырмасын басыңыз.</span>
-                    <br /><span data-key="adminImageHint">Суретті өшіру үшін карточканың үстіне апарып, төменгі оң жақтағы «Суретті өшіру» батырмасын басыңыз.</span>
+                    <i class="fas fa-info-circle"></i> <span data-key="adminHint">Элементтерді өшіру үшін карточканың үстіне апарып, қызыл</span> <i class="fas fa-trash" style="color:#ff6b6b;"></i> <span data-key="adminHint2">батырмасын басыңыз.</span>
+                    <br /><span data-key="adminHint3">Суретті өшіру үшін карточканың үстіне апарып, төменгі оң жақтағы «Суретті өшіру» батырмасын басыңыз.</span>
                 </div>
             </div>
         </div>
@@ -1059,7 +1051,7 @@
         <div class="container">
             <div class="section-header fade-up">
                 <h2 class="section-title" data-key="contactTitle">Байланыс</h2>
-                <p class="section-sub" data-key="contactDesc">
+                <p class="section-sub" data-key="contactSub">
                     Жобаңызды талқылағыңыз келе ме? Маған хат жазыңыз —
                     мен 24 сағат ішінде жауап беремін.
                 </p>
@@ -1072,10 +1064,9 @@
                         Кез келген сұрақ, идея немесе тапсырыс бойынша
                         хабарласыңыз. Бірге керемет нәрсе жасайық.
                     </p>
-
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
-                        <span>bekzatshemetaev24@gmail.com</span>
+                        <span>design@portfolio.kz</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
@@ -1083,26 +1074,26 @@
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span data-key="contactLocation">Алматы, Қазақстан</span>
+                        <span>Алматы, Қазақстан</span>
                     </div>
                 </div>
 
                 <div class="contact-form fade-up">
                     <form id="contactForm" novalidate>
                         <div class="form-group">
-                            <label for="name" data-key="contactName">Аты-жөні</label>
-                            <input type="text" id="name" placeholder="Мысалы: Айгерім Нұрланқызы" required />
+                            <label for="contactName" data-key="contactFormName">Аты-жөні</label>
+                            <input type="text" id="contactName" placeholder="Мысалы: Айгерім Нұрланқызы" required />
                         </div>
                         <div class="form-group">
-                            <label for="email" data-key="contactEmail">Электрондық пошта</label>
-                            <input type="email" id="email" placeholder="email@example.com" required />
+                            <label for="contactEmail" data-key="contactFormEmail">Электрондық пошта</label>
+                            <input type="email" id="contactEmail" placeholder="email@example.com" required />
                         </div>
                         <div class="form-group">
-                            <label for="message" data-key="contactMessage">Хабарлама</label>
-                            <textarea id="message" placeholder="Жобаңыз туралы айтыңыз..." required></textarea>
+                            <label for="contactMessage" data-key="contactFormMessage">Хабарлама</label>
+                            <textarea id="contactMessage" placeholder="Жобаңыз туралы айтыңыз..." required></textarea>
                         </div>
-                        <button type="submit" class="btn">
-                            <i class="fas fa-paper-plane"></i> <span data-key="contactSendBtn">Жіберу</span>
+                        <button type="submit" class="btn" data-key="contactFormSend">
+                            <i class="fas fa-paper-plane"></i> Жіберу
                         </button>
                     </form>
                     <div id="formStatus" style="margin-top:16px; font-weight:500;"></div>
@@ -1120,7 +1111,7 @@
                 <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
                 <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
             </div>
-            <p>&copy; 2026 Design. <span data-key="footerRights">Барлық құқықтар қорғалған.</span></p>
+            <p data-key="footerText">&copy; 2026 Design. Барлық құқықтар қорғалған.</p>
         </div>
     </footer>
 
@@ -1129,30 +1120,27 @@
         (function() {
             'use strict';
 
-            // === ADMIN MODE ===
-            const urlParams = new URLSearchParams(window.location.search);
-            const isAdmin = urlParams.get('admin') === '1';
-
-            // === TRANSLATIONS ===
+            // ========== ТІЛДЕР ==========
             const translations = {
                 kk: {
-                    navPortfolio: 'Жұмыстар',
+                    navWork: 'Жұмыстар',
                     navReviews: 'Пікірлер',
                     navContact: 'Байланыс',
+                    navAdmin: '⚙️ Басқару',
                     heroTitle1: 'Обложка',
                     heroTitle2: 'дизайны',
                     heroTitle3: 'сіздің брендіңізге',
                     heroDesc: 'Кітап, музыкалық альбом, журнал немесе кез келген басылымға кәсіби обложкалар жасаймын. Әр жоба — бірегей.',
-                    heroBtnWorks: 'Жұмыстарды көру',
+                    heroBtnWork: 'Жұмыстарды көру',
                     heroBtnContact: 'Хат жазу',
-                    statProjects: 'Аяқталған жоба',
+                    statProjectsLabel: 'Аяқталған жоба',
                     statSatisfaction: 'Қанағаттану',
                     statRating: 'Орташа рейтинг',
                     portfolioTitle: 'Менің жұмыстарым',
-                    portfolioDesc: 'Әр обложка — бұл көзге көрінетін әңгіме. Төменде соңғы жобаларымнан үзінділер.',
+                    portfolioSub: 'Әр обложка — бұл көзге көрінетін әңгіме. Төменде соңғы жобаларымнан үзінділер.',
                     testimonialsTitle: 'Клиенттер пікірі',
-                    testimonialsDesc: 'Менімен жұмыс істеген адамдар не дейді?',
-                    adminTitle: 'Админ панель',
+                    testimonialsSub: 'Менімен жұмыс істеген адамдар не дейді?',
+                    adminTitle: '⚙️ Админ панель',
                     adminSub: 'Жұмыстар мен пікірлерді басқарыңыз. Барлық өзгерістер браузеріңізде сақталады.',
                     adminAddWork: '➕ Жаңа жұмыс қосу',
                     adminWorkTitle: 'Атауы',
@@ -1168,37 +1156,38 @@
                     adminReviewText: 'Пікір мәтіні',
                     adminReviewStars: 'Жұлдыздар саны (1-5)',
                     adminReviewAddBtn: 'Қосу',
-                    adminDeleteHint: 'Элементтерді өшіру үшін карточканың үстіне апарып, қызыл 🗑️ батырмасын басыңыз.',
-                    adminImageHint: 'Суретті өшіру үшін карточканың үстіне апарып, төменгі оң жақтағы «Суретті өшіру» батырмасын басыңыз.',
+                    adminHint: 'Элементтерді өшіру үшін карточканың үстіне апарып, қызыл',
+                    adminHint2: 'батырмасын басыңыз.',
+                    adminHint3: 'Суретті өшіру үшін карточканың үстіне апарып, төменгі оң жақтағы «Суретті өшіру» батырмасын басыңыз.',
                     contactTitle: 'Байланыс',
-                    contactDesc: 'Жобаңызды талқылағыңыз келе ме? Маған хат жазыңыз — мен 24 сағат ішінде жауап беремін.',
+                    contactSub: 'Жобаңызды талқылағыңыз келе ме? Маған хат жазыңыз — мен 24 сағат ішінде жауап беремін.',
                     contactInfoTitle: 'Сізбен байланысуға қуаныштымын!',
                     contactInfoDesc: 'Кез келген сұрақ, идея немесе тапсырыс бойынша хабарласыңыз. Бірге керемет нәрсе жасайық.',
-                    contactLocation: 'Алматы, Қазақстан',
-                    contactName: 'Аты-жөні',
-                    contactEmail: 'Электрондық пошта',
-                    contactMessage: 'Хабарлама',
-                    contactSendBtn: 'Жіберу',
-                    footerRights: 'Барлық құқықтар қорғалған.'
+                    contactFormName: 'Аты-жөні',
+                    contactFormEmail: 'Электрондық пошта',
+                    contactFormMessage: 'Хабарлама',
+                    contactFormSend: 'Жіберу',
+                    footerText: '© 2026 Design. Барлық құқықтар қорғалған.'
                 },
                 ru: {
-                    navPortfolio: 'Работы',
+                    navWork: 'Работы',
                     navReviews: 'Отзывы',
                     navContact: 'Контакты',
-                    heroTitle1: 'Дизайн',
-                    heroTitle2: 'обложек',
+                    navAdmin: '⚙️ Управление',
+                    heroTitle1: 'Обложка',
+                    heroTitle2: 'дизайн',
                     heroTitle3: 'для вашего бренда',
-                    heroDesc: 'Создаю профессиональные обложки для книг, музыкальных альбомов, журналов и любых изданий. Каждый проект уникален.',
-                    heroBtnWorks: 'Посмотреть работы',
-                    heroBtnContact: 'Написать',
-                    statProjects: 'Завершено проектов',
+                    heroDesc: 'Создаю профессиональные обложки для книг, музыкальных альбомов, журналов и любых изданий. Каждый проект — уникален.',
+                    heroBtnWork: 'Посмотреть работы',
+                    heroBtnContact: 'Написать письмо',
+                    statProjectsLabel: 'Завершённых проектов',
                     statSatisfaction: 'Удовлетворение',
                     statRating: 'Средний рейтинг',
                     portfolioTitle: 'Мои работы',
-                    portfolioDesc: 'Каждая обложка — это видимая история. Ниже фрагменты моих последних проектов.',
+                    portfolioSub: 'Каждая обложка — это видимая история. Ниже примеры моих последних проектов.',
                     testimonialsTitle: 'Отзывы клиентов',
-                    testimonialsDesc: 'Что говорят люди, работавшие со мной?',
-                    adminTitle: 'Панель администратора',
+                    testimonialsSub: 'Что говорят люди, работавшие со мной?',
+                    adminTitle: '⚙️ Админ-панель',
                     adminSub: 'Управляйте работами и отзывами. Все изменения сохраняются в вашем браузере.',
                     adminAddWork: '➕ Добавить работу',
                     adminWorkTitle: 'Название',
@@ -1214,24 +1203,24 @@
                     adminReviewText: 'Текст отзыва',
                     adminReviewStars: 'Количество звёзд (1-5)',
                     adminReviewAddBtn: 'Добавить',
-                    adminDeleteHint: 'Чтобы удалить элемент, наведите на карточку и нажмите красную 🗑️ кнопку.',
-                    adminImageHint: 'Чтобы удалить изображение, наведите на карточку и нажмите кнопку «Удалить изображение» внизу справа.',
+                    adminHint: 'Чтобы удалить элемент, наведите на карточку и нажмите красную',
+                    adminHint2: 'кнопку.',
+                    adminHint3: 'Чтобы удалить изображение, наведите на карточку и нажмите кнопку «Удалить изображение» внизу справа.',
                     contactTitle: 'Контакты',
-                    contactDesc: 'Хотите обсудить ваш проект? Напишите мне — я отвечу в течение 24 часов.',
+                    contactSub: 'Хотите обсудить проект? Напишите мне — я отвечу в течение 24 часов.',
                     contactInfoTitle: 'Рад связаться с вами!',
                     contactInfoDesc: 'Свяжитесь по любым вопросам, идеям или заказам. Сделаем вместе что-то прекрасное.',
-                    contactLocation: 'Алматы, Казахстан',
-                    contactName: 'Имя',
-                    contactEmail: 'Электронная почта',
-                    contactMessage: 'Сообщение',
-                    contactSendBtn: 'Отправить',
-                    footerRights: 'Все права защищены.'
+                    contactFormName: 'Имя',
+                    contactFormEmail: 'Электронная почта',
+                    contactFormMessage: 'Сообщение',
+                    contactFormSend: 'Отправить',
+                    footerText: '© 2026 Design. Все права защищены.'
                 }
             };
 
-            let currentLang = 'kk';
+            let currentLang = localStorage.getItem('lang') || 'kk';
 
-            // === DEFAULT DATA ===
+            // ========== LOCALSTORAGE ДЕРЕКТЕР ==========
             const defaultPortfolio = [
                 { id: 1, title: '«Жұлдызды түн»', desc: 'Поэзия жинағының обложкасы', badge: 'Кітап', icon: 'fa-book-open',
                     image: null },
@@ -1256,7 +1245,6 @@
                     stars: 5 }
             ];
 
-            // === LOCALSTORAGE ===
             function getData(key, defaultVal) {
                 const raw = localStorage.getItem(key);
                 if (raw) {
@@ -1276,38 +1264,69 @@
 
             function saveTestimonials() { setData('testimonialItems', testimonialItems); }
 
-            // === RENDER ===
+            // ========== СУРЕТТІ ҚЫСУ ФУНКЦИЯСЫ ==========
+            function resizeImage(file, maxWidth = 800, maxHeight = 800, quality = 0.8) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            let width = img.width;
+                            let height = img.height;
+                            if (width > maxWidth) {
+                                height = height * (maxWidth / width);
+                                width = maxWidth;
+                            }
+                            if (height > maxHeight) {
+                                width = width * (maxHeight / height);
+                                height = maxHeight;
+                            }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                            resolve(dataUrl);
+                        };
+                        img.onerror = reject;
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // ========== РЕНДЕР ==========
             function renderPortfolio() {
                 const grid = document.getElementById('portfolioGrid');
                 if (!grid) return;
-
                 if (portfolioItems.length === 0) {
                     grid.innerHTML =
-                        `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">${currentLang === 'kk' ? 'Әзірше жұмыс жоқ. Админ панель арқылы қосыңыз.' : 'Пока нет работ. Добавьте через админ-панель.'}</div>`;
+                        `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">Әзірше жұмыс жоқ. Админ панель арқылы қосыңыз.</div>`;
                     return;
                 }
-
+                const colors = [
+                    'linear-gradient(135deg, #1a1035, #2d1b69)',
+                    'linear-gradient(135deg, #1a1a2e, #16213e)',
+                    'linear-gradient(135deg, #1e1a2a, #3a1f3d)',
+                    'linear-gradient(135deg, #0f1a2c, #1b3a4b)',
+                    'linear-gradient(135deg, #1e1428, #3d1f3d)',
+                    'linear-gradient(135deg, #111827, #1f2937)'
+                ];
+                const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
                 let html = '';
                 portfolioItems.forEach((item, index) => {
-                    const colors = [
-                        'linear-gradient(135deg, #1a1035, #2d1b69)',
-                        'linear-gradient(135deg, #1a1a2e, #16213e)',
-                        'linear-gradient(135deg, #1e1a2a, #3a1f3d)',
-                        'linear-gradient(135deg, #0f1a2c, #1b3a4b)',
-                        'linear-gradient(135deg, #1e1428, #3d1f3d)',
-                        'linear-gradient(135deg, #111827, #1f2937)'
-                    ];
                     const bg = colors[index % colors.length];
                     const imageHtml = item.image ? `<img src="${item.image}" alt="${item.title}" />` : '';
-
                     html += `
                         <div class="portfolio-item fade-up" style="transition-delay:${index * 0.05}s;">
                             <div class="thumb" style="${item.image ? '' : `background:${bg};`}">
                                 ${imageHtml}
                                 <span class="badge">${item.badge}</span>
                                 <i class="fas ${item.icon || 'fa-layer-group'} overlay-icon"></i>
-                                ${isAdmin ? `<button class="admin-delete-btn" data-id="${item.id}" data-type="portfolio" title="${currentLang === 'kk' ? 'Өшіру' : 'Удалить'}"><i class="fas fa-trash"></i></button>` : ''}
-                                ${isAdmin && item.image ? `<button class="admin-remove-img-btn" data-id="${item.id}" data-type="remove-image" title="${currentLang === 'kk' ? 'Суретті өшіру' : 'Удалить изображение'}"><i class="fas fa-image"></i> ${currentLang === 'kk' ? 'Суретті өшіру' : 'Удалить изображение'}</button>` : ''}
+                                ${isAdmin ? `<button class="admin-delete-btn" data-id="${item.id}" data-type="portfolio" title="Өшіру"><i class="fas fa-trash"></i></button>` : ''}
+                                ${isAdmin && item.image ? `<button class="admin-remove-img-btn" data-id="${item.id}" data-type="remove-image" title="Суретті өшіру"><i class="fas fa-image"></i> Суретті өшіру</button>` : ''}
                             </div>
                             <div class="info">
                                 <h3>${item.title}</h3>
@@ -1323,21 +1342,19 @@
             function renderTestimonials() {
                 const grid = document.getElementById('testimonialsGrid');
                 if (!grid) return;
-
                 if (testimonialItems.length === 0) {
                     grid.innerHTML =
-                        `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">${currentLang === 'kk' ? 'Пікірлер әзірше жоқ. Бірінші болып қосыңыз!' : 'Отзывов пока нет. Добавьте первый!'}</div>`;
+                        `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">Пікірлер әзірше жоқ. Бірінші болып қосыңыз!</div>`;
                     return;
                 }
-
+                const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
                 let html = '';
                 testimonialItems.forEach((item, index) => {
                     const starsHtml = '★'.repeat(item.stars) + '☆'.repeat(5 - item.stars);
                     const avatarLetter = item.name.charAt(0).toUpperCase();
-
                     html += `
                         <div class="testimonial-card fade-up" style="transition-delay:${index * 0.05}s;">
-                            ${isAdmin ? `<button class="admin-delete-btn" data-id="${item.id}" data-type="testimonial" title="${currentLang === 'kk' ? 'Өшіру' : 'Удалить'}"><i class="fas fa-trash"></i></button>` : ''}
+                            ${isAdmin ? `<button class="admin-delete-btn" data-id="${item.id}" data-type="testimonial" title="Өшіру"><i class="fas fa-trash"></i></button>` : ''}
                             <div class="stars">${starsHtml}</div>
                             <blockquote>${item.text}</blockquote>
                             <div class="author">
@@ -1354,9 +1371,8 @@
                 observeFadeElements();
             }
 
-            // === ANIMATION ===
             function observeFadeElements() {
-                const fadeEls = document.querySelectorAll('.fade-up:not(.visible)');
+                const fadeEls = document.querySelectorAll('.fade-up');
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -1367,146 +1383,45 @@
                 fadeEls.forEach(el => observer.observe(el));
             }
 
-            // === STATS ===
             function updateStats() {
                 const statEl = document.getElementById('statProjects');
-                if (statEl) {
-                    statEl.textContent = portfolioItems.length + '+';
-                }
+                if (statEl) statEl.textContent = portfolioItems.length + '+';
             }
 
-            // === LANGUAGE ===
+            // ========== ТІЛДІ АУЫСТЫРУ ==========
             function applyLanguage(lang) {
                 currentLang = lang;
-
-                // update buttons
-                document.querySelectorAll('.lang-btn').forEach(btn => {
+                localStorage.setItem('lang', lang);
+                const t = translations[lang];
+                document.querySelectorAll('[data-key]').forEach(el => {
+                    const key = el.getAttribute('data-key');
+                    if (t[key]) {
+                        el.textContent = t[key];
+                    }
+                });
+                // тіл батырмаларын белсенді ету
+                document.querySelectorAll('.lang-switcher button').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.lang === lang);
                 });
-
-                // update all data-key elements
-                document.querySelectorAll('[data-key]').forEach(el => {
-                    const key = el.dataset.key;
-                    if (translations[lang] && translations[lang][key] !== undefined) {
-                        // Если это input placeholder
-                        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                            // Для полей ввода используем placeholder
-                            const placeholderMap = {
-                                'pTitle': 'Мысалы: «Жұлдызды түн»',
-                                'pDesc': 'Мысалы: Поэзия жинағының обложкасы',
-                                'pBadge': 'Кітап / Музыка / Журнал / Бренд',
-                                'pIcon': 'fa-book-open, fa-headphones, ...',
-                                'tName': 'Мысалы: Айгерім Н.',
-                                'tRole': 'Жазушы, музыкант, ...',
-                                'tText': 'Пікіріңізді жазыңыз...',
-                                'name': 'Мысалы: Айгерім Нұрланқызы',
-                                'email': 'email@example.com',
-                                'message': 'Жобаңыз туралы айтыңыз...'
-                            };
-                            // Для полей ввода с placeholder
-                            if (el.id && placeholderMap[el.id]) {
-                                // Пропускаем, оставляем как есть
-                            }
-                            // Если это label, меняем текст
-                            if (el.tagName === 'LABEL') {
-                                el.textContent = translations[lang][key];
-                            }
-                        } else {
-                            // Для обычных элементов
-                            // Проверяем, не является ли это кнопкой с иконкой внутри
-                            if (el.tagName === 'BUTTON' || el.tagName === 'A') {
-                                // Для кнопок с иконкой - меняем только текст, иконку оставляем
-                                const icon = el.querySelector('i');
-                                if (icon) {
-                                    // Сохраняем иконку, меняем только текстовое содержимое
-                                    const iconHTML = icon.outerHTML;
-                                    el.innerHTML = iconHTML + ' ' + translations[lang][key];
-                                } else {
-                                    el.textContent = translations[lang][key];
-                                }
-                            } else {
-                                el.textContent = translations[lang][key];
-                            }
-                        }
-                    }
-                });
-
-                // Обновляем админские подсказки вручную
-                document.querySelectorAll('.admin-delete-btn, .admin-remove-img-btn').forEach(btn => {
-                    if (btn.dataset.type === 'portfolio' || btn.dataset.type === 'testimonial') {
-                        btn.title = lang === 'kk' ? 'Өшіру' : 'Удалить';
-                    }
-                });
-
-                // Перерендерим карточки для обновления текста
-                renderPortfolio();
-                renderTestimonials();
             }
 
-            // === SETUP ===
-            function setupLanguageSwitcher() {
-                document.querySelectorAll('.lang-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const lang = this.dataset.lang;
-                        applyLanguage(lang);
-                    });
-                });
-            }
-
-            function setupAdminPanel() {
+            // ========== АДМИН ПАНЕЛЬ ==========
+            function toggleAdminUI() {
+                const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
                 const panel = document.getElementById('adminPanelContainer');
                 const navLink = document.getElementById('adminNavLink');
                 if (isAdmin) {
                     panel.classList.add('visible');
                     navLink.style.display = 'block';
-
-                    // Delete handlers
-                    document.addEventListener('click', function(e) {
-                        const target = e.target.closest('.admin-delete-btn');
-                        if (target) {
-                            e.preventDefault();
-                            const id = parseInt(target.dataset.id);
-                            const type = target.dataset.type;
-                            const confirmMsg = currentLang === 'kk' ? 'Бұл элементті өшіруге сенімдісіз бе?' :
-                                'Вы уверены, что хотите удалить этот элемент?';
-                            if (!confirm(confirmMsg)) return;
-
-                            if (type === 'portfolio') {
-                                portfolioItems = portfolioItems.filter(item => item.id !== id);
-                                savePortfolio();
-                                renderPortfolio();
-                                updateStats();
-                            } else if (type === 'testimonial') {
-                                testimonialItems = testimonialItems.filter(item => item.id !== id);
-                                saveTestimonials();
-                                renderTestimonials();
-                            }
-                        }
-
-                        const removeImgBtn = e.target.closest('.admin-remove-img-btn');
-                        if (removeImgBtn) {
-                            e.preventDefault();
-                            const id = parseInt(removeImgBtn.dataset.id);
-                            const confirmMsg = currentLang === 'kk' ? 'Бұл жұмыстың суретін өшіруге сенімдісіз бе?' :
-                                'Вы уверены, что хотите удалить изображение?';
-                            if (!confirm(confirmMsg)) return;
-
-                            const item = portfolioItems.find(i => i.id === id);
-                            if (item) {
-                                item.image = null;
-                                savePortfolio();
-                                renderPortfolio();
-                            }
-                        }
-                    });
                 } else {
                     panel.classList.remove('visible');
                     navLink.style.display = 'none';
                 }
             }
 
+            // ========== ФОРМАЛАР ==========
             function setupForms() {
-                // Image preview
+                // Суретті алдын ала қарау
                 const imageInput = document.getElementById('pImage');
                 const imagePreview = document.getElementById('pImagePreview');
                 if (imageInput && imagePreview) {
@@ -1525,10 +1440,10 @@
                     });
                 }
 
-                // Add portfolio
+                // Жаңа жұмыс қосу
                 const addPortfolioForm = document.getElementById('addPortfolioForm');
                 if (addPortfolioForm) {
-                    addPortfolioForm.addEventListener('submit', function(e) {
+                    addPortfolioForm.addEventListener('submit', async function(e) {
                         e.preventDefault();
                         const title = document.getElementById('pTitle').value.trim();
                         const desc = document.getElementById('pDesc').value.trim();
@@ -1537,56 +1452,32 @@
                         const imageFile = document.getElementById('pImage').files[0];
 
                         if (!title || !desc || !badge) {
-                            alert(currentLang === 'kk' ? 'Барлық мәтіндік өрістерді толтырыңыз!' :
-                                'Заполните все текстовые поля!');
+                            alert('Барлық мәтіндік өрістерді толтырыңыз!');
                             return;
                         }
 
-                        const newId = portfolioItems.length ? Math.max(...portfolioItems.map(i => i.id)) + 1 : 1;
-
-                        const processImage = (callback) => {
-                            if (imageFile) {
-                                if (imageFile.size > 5 * 1024 * 1024) {
-                                    alert(currentLang === 'kk' ? 'Сурет тым үлкен (макс. 5МБ)' :
-                                        'Изображение слишком большое (макс. 5МБ)');
-                                    callback(null);
-                                    return;
-                                }
-                                const reader = new FileReader();
-                                reader.onload = function(event) {
-                                    callback(event.target.result);
-                                };
-                                reader.onerror = function() {
-                                    alert(currentLang === 'kk' ? 'Суретті оқу қатесі' :
-                                        'Ошибка чтения изображения');
-                                    callback(null);
-                                };
-                                reader.readAsDataURL(imageFile);
-                            } else {
-                                callback(null);
+                        let imageData = null;
+                        if (imageFile) {
+                            try {
+                                imageData = await resizeImage(imageFile, 800, 800, 0.8);
+                            } catch (err) {
+                                alert('Суретті өңдеу кезінде қате кетті. Басқа сурет таңдаңыз.');
+                                return;
                             }
-                        };
+                        }
 
-                        processImage((imageData) => {
-                            portfolioItems.push({
-                                id: newId,
-                                title,
-                                desc,
-                                badge,
-                                icon,
-                                image: imageData
-                            });
-                            savePortfolio();
-                            renderPortfolio();
-                            updateStats();
-                            this.reset();
-                            document.getElementById('pIcon').value = 'fa-layer-group';
-                            imagePreview.classList.remove('visible');
-                        });
+                        const newId = portfolioItems.length ? Math.max(...portfolioItems.map(i => i.id)) + 1 : 1;
+                        portfolioItems.push({ id: newId, title, desc, badge, icon, image: imageData });
+                        savePortfolio();
+                        renderPortfolio();
+                        updateStats();
+                        this.reset();
+                        document.getElementById('pIcon').value = 'fa-layer-group';
+                        imagePreview.classList.remove('visible');
                     });
                 }
 
-                // Add testimonial
+                // Жаңа пікір қосу
                 const addTestimonialForm = document.getElementById('addTestimonialForm');
                 if (addTestimonialForm) {
                     addTestimonialForm.addEventListener('submit', function(e) {
@@ -1597,8 +1488,7 @@
                         const stars = parseInt(document.getElementById('tStars').value);
 
                         if (!name || !role || !text) {
-                            alert(currentLang === 'kk' ? 'Барлық өрістерді толтырыңыз!' :
-                                'Заполните все поля!');
+                            alert('Барлық өрістерді толтырыңыз!');
                             return;
                         }
 
@@ -1610,74 +1500,98 @@
                         this.reset();
                     });
                 }
+
+                // Өшіру және суретті өшіру оқиғалары
+                document.addEventListener('click', function(e) {
+                    const target = e.target.closest('.admin-delete-btn');
+                    if (target) {
+                        e.preventDefault();
+                        const id = parseInt(target.dataset.id);
+                        const type = target.dataset.type;
+                        if (type === 'portfolio') {
+                            if (confirm('Бұл жұмысты өшіруге сенімдісіз бе?')) {
+                                portfolioItems = portfolioItems.filter(item => item.id !== id);
+                                savePortfolio();
+                                renderPortfolio();
+                                updateStats();
+                            }
+                        } else if (type === 'testimonial') {
+                            if (confirm('Бұл пікірді өшіруге сенімдісіз бе?')) {
+                                testimonialItems = testimonialItems.filter(item => item.id !== id);
+                                saveTestimonials();
+                                renderTestimonials();
+                            }
+                        }
+                    }
+
+                    const removeImgBtn = e.target.closest('.admin-remove-img-btn');
+                    if (removeImgBtn) {
+                        e.preventDefault();
+                        const id = parseInt(removeImgBtn.dataset.id);
+                        if (confirm('Бұл жұмыстың суретін өшіруге сенімдісіз бе?')) {
+                            const item = portfolioItems.find(i => i.id === id);
+                            if (item) {
+                                item.image = null;
+                                savePortfolio();
+                                renderPortfolio();
+                            }
+                        }
+                    }
+                });
             }
 
-            // === CONTACT FORM ===
+            // ========== БАЙЛАНЫС ФОРМАСЫ (mailto) ==========
             function setupContactForm() {
                 const form = document.getElementById('contactForm');
                 const status = document.getElementById('formStatus');
                 if (!form) return;
 
+                // Сақталған мәліметтерді толтыру
+                const savedName = localStorage.getItem('contactName') || '';
+                const savedEmail = localStorage.getItem('contactEmail') || '';
+                const savedMessage = localStorage.getItem('contactMessage') || '';
+                document.getElementById('contactName').value = savedName;
+                document.getElementById('contactEmail').value = savedEmail;
+                document.getElementById('contactMessage').value = savedMessage;
+
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    const name = document.getElementById('name').value.trim();
-                    const email = document.getElementById('email').value.trim();
-                    const message = document.getElementById('message').value.trim();
+                    const name = document.getElementById('contactName').value.trim();
+                    const email = document.getElementById('contactEmail').value.trim();
+                    const message = document.getElementById('contactMessage').value.trim();
 
                     if (!name || !email || !message) {
                         status.style.color = '#FF6B6B';
-                        status.textContent = currentLang === 'kk' ? 'Барлық өрістерді толтырыңыз.' :
-                            'Заполните все поля.';
+                        status.textContent = 'Барлық өрістерді толтырыңыз.';
                         return;
                     }
                     if (!email.includes('@') || !email.includes('.')) {
                         status.style.color = '#FF6B6B';
-                        status.textContent = currentLang === 'kk' ? 'Дұрыс электрондық пошта енгізіңіз.' :
-                            'Введите корректный email.';
+                        status.textContent = 'Дұрыс электрондық пошта енгізіңіз.';
                         return;
                     }
 
-                    status.style.color = '#6C3CE1';
-                    status.textContent = currentLang === 'kk' ? 'Хабарлама жіберілуде...' :
-                        'Отправка сообщения...';
+                    // Сақтау
+                    localStorage.setItem('contactName', name);
+                    localStorage.setItem('contactEmail', email);
+                    localStorage.setItem('contactMessage', message);
 
-                    // Отправка на email через FormSubmit (бесплатный сервис)
-                    const formData = new FormData();
-                    formData.append('name', name);
-                    formData.append('email', email);
-                    formData.append('message', message);
-                    formData.append('_to', 'bekzatshemetaev24@gmail.com');
+                    // mailto сілтемесін құру
+                    const subject = encodeURIComponent('Сайттан хабарлама: ' + name);
+                    const body = encodeURIComponent(
+                        `Аты-жөні: ${name}\nEmail: ${email}\n\nХабарлама:\n${message}`
+                    );
+                    const mailtoLink = `mailto:bekzatshemetaev24@gmail.com?subject=${subject}&body=${body}`;
 
-                    fetch('https://formsubmit.co/ajax/bekzatshemetaev24@gmail.com', {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                status.style.color = '#4ade80';
-                                status.textContent = currentLang === 'kk' ?
-                                    '✅ Хабарламаңыз сәтті жіберілді! Рахмет.' :
-                                    '✅ Ваше сообщение успешно отправлено! Спасибо.';
-                                form.reset();
-                            } else {
-                                throw new Error('Server error');
-                            }
-                        })
-                        .catch(err => {
-                            // fallback: mailto
-                            const subject = encodeURIComponent(`Портфолио сайтынан хабарлама: ${name}`);
-                            const body = encodeURIComponent(`Аты: ${name}\nEmail: ${email}\n\nХабарлама:\n${message}`);
-                            window.location.href = `mailto:bekzatshemetaev24@gmail.com?subject=${subject}&body=${body}`;
-                            status.style.color = '#4ade80';
-                            status.textContent = currentLang === 'kk' ?
-                                '✅ Хабарлама пошта бағдарламасына жіберілді.' :
-                                '✅ Сообщение отправлено в почтовую программу.';
-                            form.reset();
-                        });
+                    // Жаңа терезеде ашу
+                    window.open(mailtoLink, '_blank');
+
+                    status.style.color = '#4ade80';
+                    status.textContent = '✅ Хат дайын. Поштаңызды тексеріп, жіберіңіз.';
                 });
             }
 
-            // === MOBILE MENU ===
+            // ========== МОБИЛЬДІ МӘЗІР ==========
             function setupMobileMenu() {
                 const hamburger = document.getElementById('hamburger');
                 const navLinks = document.getElementById('navLinks');
@@ -1693,7 +1607,7 @@
                 }
             }
 
-            // === HEADER SHADOW ===
+            // ========== HEADER КӨЛЕҢКЕСІ ==========
             function setupHeaderShadow() {
                 const header = document.querySelector('header');
                 window.addEventListener('scroll', () => {
@@ -1701,21 +1615,34 @@
                 });
             }
 
-            // === INIT ===
+            // ========== ТІЛ БАТЫРМАЛАРЫ ==========
+            function setupLangSwitcher() {
+                document.querySelectorAll('.lang-switcher button').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const lang = this.dataset.lang;
+                        applyLanguage(lang);
+                        // Барлық мәтіндерді жаңарту үшін қайта рендеринг қажет емес, себебі data-key арқылы ауыстырылды
+                    });
+                });
+            }
+
+            // ========== INIT ==========
             function init() {
+                // Тілді қолдану
+                applyLanguage(currentLang);
+                // Админ режимін тексереміз
+                toggleAdminUI();
+                // Деректерді рендерлеу
                 renderPortfolio();
                 renderTestimonials();
                 updateStats();
-                setupAdminPanel();
+                // Формалар
                 setupForms();
                 setupContactForm();
                 setupMobileMenu();
                 setupHeaderShadow();
-                setupLanguageSwitcher();
+                setupLangSwitcher();
                 observeFadeElements();
-
-                // Применяем язык по умолчанию
-                applyLanguage('kk');
             }
 
             document.addEventListener('DOMContentLoaded', init);
