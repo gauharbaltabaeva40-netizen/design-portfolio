@@ -511,6 +511,7 @@
             border: 2px solid var(--primary);
             border-radius: var(--radius);
             display: none;
+            /* hidden by default */;
         }
         .admin-panel.visible {
             display: block;
@@ -580,6 +581,7 @@
             margin-top: 4px;
         }
 
+        /* file input styling */
         .file-input-wrapper {
             position: relative;
             overflow: hidden;
@@ -832,6 +834,7 @@
             transform: translateY(0);
         }
 
+        /* ===== ADMIN BADGE ===== */
         .admin-badge {
             background: var(--accent);
             color: #fff;
@@ -951,7 +954,7 @@
                     <!-- Жаңа жұмыс қосу -->
                     <div class="admin-form-box">
                         <h3>➕ Жаңа жұмыс қосу</h3>
-                        <form id="addPortfolioForm">
+                        <form id="addPortfolioForm" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="pTitle">Атауы</label>
                                 <input type="text" id="pTitle" placeholder="Мысалы: «Жұлдызды түн»" required />
@@ -1098,7 +1101,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const isAdmin = urlParams.get('admin') === '1';
 
-            // === Default data (егер LocalStorage бос болса) ===
+            // === Default data ===
             const defaultPortfolio = [
                 { id: 1, title: '«Жұлдызды түн»', desc: 'Поэзия жинағының обложкасы', badge: 'Кітап', icon: 'fa-book-open',
                     image: null },
@@ -1125,15 +1128,24 @@
 
             // === LocalStorage helpers ===
             function getData(key, defaultVal) {
-                const raw = localStorage.getItem(key);
-                if (raw) {
-                    try { return JSON.parse(raw); } catch (e) { /* ignore */ }
+                try {
+                    const raw = localStorage.getItem(key);
+                    if (raw) {
+                        return JSON.parse(raw);
+                    }
+                } catch (e) {
+                    console.warn('LocalStorage оқу қатесі:', e);
                 }
                 return defaultVal;
             }
 
             function setData(key, data) {
-                localStorage.setItem(key, JSON.stringify(data));
+                try {
+                    localStorage.setItem(key, JSON.stringify(data));
+                } catch (e) {
+                    console.error('LocalStorage сақтау қатесі:', e);
+                    alert('Деректерді сақтау мүмкін болмады. Сурет тым үлкен болуы мүмкін (макс. ~5МБ).');
+                }
             }
 
             let portfolioItems = getData('portfolioItems', defaultPortfolio);
@@ -1262,9 +1274,7 @@
                     panel.classList.add('visible');
                     navLink.style.display = 'block';
 
-                    // Кликтерді өңдеу (өшіру, суретті өшіру)
                     document.addEventListener('click', function(e) {
-                        // Әдеттегі өшіру
                         const target = e.target.closest('.admin-delete-btn');
                         if (target) {
                             e.preventDefault();
@@ -1286,7 +1296,6 @@
                             }
                         }
 
-                        // Суретті өшіру
                         const removeImgBtn = e.target.closest('.admin-remove-img-btn');
                         if (removeImgBtn) {
                             e.preventDefault();
@@ -1347,7 +1356,6 @@
 
                         const newId = portfolioItems.length ? Math.max(...portfolioItems.map(i => i.id)) + 1 : 1;
 
-                        // Егер сурет жүктелсе, оны Base64-ге түрлендіреміз
                         const processImage = (callback) => {
                             if (imageFile) {
                                 const reader = new FileReader();
@@ -1372,15 +1380,19 @@
                                 icon: icon,
                                 image: imageData
                             };
+
                             portfolioItems.push(newItem);
                             savePortfolio();
                             renderPortfolio();
                             updateStats();
 
                             // Форманы тазалау
-                            document.getElementById('addPortfolioForm').reset();
+                            this.reset();
                             document.getElementById('pIcon').value = 'fa-layer-group';
                             imagePreview.classList.remove('visible');
+
+                            // Жетістік туралы хабар
+                            alert('Жұмыс сәтті қосылды!');
                         });
                     });
                 }
@@ -1401,11 +1413,12 @@
                         }
 
                         const newId = testimonialItems.length ? Math.max(...testimonialItems.map(i => i.id)) + 1 :
-                        1;
+                            1;
                         testimonialItems.push({ id: newId, name, role, text, stars });
                         saveTestimonials();
                         renderTestimonials();
                         this.reset();
+                        alert('Пікір сәтті қосылды!');
                     });
                 }
             }
@@ -1483,6 +1496,10 @@
                 setupMobileMenu();
                 setupHeaderShadow();
                 observeFadeElements();
+
+                // Консольге ағымдағы деректерді шығару (тексеру үшін)
+                console.log('Portfolio items:', portfolioItems);
+                console.log('Testimonial items:', testimonialItems);
             }
 
             document.addEventListener('DOMContentLoaded', init);
